@@ -1,0 +1,313 @@
+/**
+ * Sultan Somatı – Menü: her mutfak / grup tek panel, altında bölüm başlıkları.
+ *
+ * Ürün alanları: name, price, description?, note?, glutenFree?
+ * image? (opsiyonel) — veritabanından base64 veya tam data URL:
+ *   - Tercih: "data:image/png;base64,...." veya "data:image/webp;base64,...."
+ *   - Sadece ham base64 string ise varsayılan olarak JPEG kabul edilir (resolveMenuImageSrc).
+ *
+ * Panel (opsiyonel): coverImage — kategori kartı arka planı (URL veya base64 data URL).
+ *   Boşsa src/data/menuPanelCovers.js içindeki görsel kullanılır.
+ */
+
+export const menuPanels = [
+  {
+    id: 'selcuklu-mevlevi',
+    title: 'Selçuklu Mevlevi Mutfağı',
+    sections: [
+      {
+        title: 'Çorba',
+        items: [
+          { name: 'Tarhana Çorbası', price: '280', description: 'Anadolu Tarhanası, Kırmızı Toz Biber, Tereyağı, Tuz, Su' },
+          { name: 'Tutmaç Çorbası', price: '340', description: 'Un, Yoğurt, Erişte veya Nohut, Dana Eti, Sarımsak ve Baharatlar' },
+        ],
+      },
+      {
+        title: 'Ara Sıcaklar',
+        items: [
+          { name: 'Patlıcan Kalyesi', price: '390', description: 'Güneşte Kurutulmuş Patlıcan, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Fasülye Kalyesi', price: '390', description: 'Güneşte Kurutulmuş Fasülye, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Biber Kalyesi', price: '390', description: 'Güneşte Kurutulmuş Biber, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Karışık Kalye Tabağı', price: '490', description: 'Güneşte Kurutulmuş Patlıcan, Biber, Fasülye, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Ispanak Boranisi', price: '390', description: 'Ispanak, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+        ],
+      },
+      {
+        title: 'Ana Yemekler',
+        items: [
+          { name: 'Hurmalı Erikli Dana Biryan', price: '740', description: 'Toprak Güveç Kapta, Dana Biftek Eti, Medine Hurması, Kurutulmuş Dağ Eriği, Kuru Soğan ve Baharatlar', glutenFree: true },
+          { name: 'Hassaten Lokma (Lokmanın Hası)', price: '690', description: 'Pirinç, Dana Eti, Kuru İncir, Kuş Üzümü, Badem, Fıstık ve Baharatlar', glutenFree: true },
+          { name: 'Elmalı Dana Biryan', price: '740', description: 'Toprak Güveç Kapta, Dana Biftek Eti, Taze Yeşil Elma, Tarçın, Bal, Ceviz, Kuru Soğan ve Baharatlar', glutenFree: true },
+          { name: 'Vişneli Kuzu İncik', price: '990', description: 'Safranlı ve Zerdeçallı Bulgur Pilavı, Haşlama Kuzu İncik, Kurutulmuş Vişne' },
+          { name: 'Etli Bulgur Aşı', price: '690', description: 'Safranlı ve Zerdeçallı Bulgur Pilavı, Dana Kavurma' },
+          { name: 'Kayısılı Kuzu Gerdan', price: '740', description: 'Toprak Güveç Kabın İçerisinde Safranlı Zerdeçallı Bulgur Pilavı Üzerinde Kuru Kayısı ve Kuru Soğan ile Haşlanmış Kemikli Kuzu Gerdan Eti' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'osmanli',
+    title: 'Osmanlı Mutfağı',
+    sections: [
+      {
+        title: 'Çorba',
+        items: [
+          { name: 'Çeşmi Nigar Çorbası', price: '280', description: 'Mısır Unu, Mercimek, Sarımsak, Kuru Soğan ve Baharatlar' },
+        ],
+      },
+      {
+        title: 'Ara Sıcaklar',
+        items: [
+          { name: 'Kıymalı Su Böreği', price: '340', description: 'El Açması Yufka, Dana Kıyma, Kuru Soğan, Tereyağı ve Baharatlar' },
+          { name: 'Peynirli Su Böreği', price: '290', description: 'El Açması Yufka, Peynir, Tereyağı ve Baharatlar' },
+          { name: 'Tahinli Cevizli Humus', price: '340', description: 'Nohut, Ceviz, Tahin, Sarımsak, Limon Suyu, Zeytinyağı, Tuz ve Baharatlar' },
+          { name: 'Cevizli Haydari', price: '340', description: 'Ceviz, Yoğurt, Közlenmiş Patlıcan, Zeytinyağı, Sarımsak, Dereotu, Tuz ve Baharatlar', glutenFree: true },
+          { name: 'Ispanaklı Peynirli Kalem Böreği', price: '290', description: 'El Açması Yufka, Sütte Haşlanmış Ispanak, Kaşar Peyniri ve Tulum Peyniri' },
+          { name: 'Kırmızı Pancar Yemeği', price: '390', description: 'Kırmızı Pancar, Zeytinyağı, Yoğurt ve Baharatlar', glutenFree: true },
+          { name: 'Vişneli Yaprak Sarma', price: '390', description: 'Asma Yaprağı, Vişne, Tarçın, Pirinç, Salça, Zeytinyağı ve Baharatlar', glutenFree: true },
+        ],
+      },
+      {
+        title: 'Ana Yemekler',
+        items: [
+          { name: 'Tavuklu Mahmudiye', price: '570', description: 'Tavuk Göğüsü, Bal, Badem, Kuru Kayısı, Kuru Üzüm, Arpacık Soğan, Maydonoz ve Baharatlar', glutenFree: true },
+          { name: 'Dana Seferceliye', price: '740', description: 'Dana Biftek Eti, Arpacık Soğan, Bal, Badem, Ayva Kurusu ve Baharatlar', glutenFree: true },
+          { name: 'Kuzu Mutancana', price: '890', description: 'Kuzu Eti, Arpacık Soğan, Bal, Badem, Kuru Kayısı, Kuru İncir, Kuru Üzüm ve Baharatlar', glutenFree: true },
+          { name: 'Sütlü Kahveli Et', price: '740', description: 'Çekirdek Kahve ile Marine Edilmiş Dana Biftek Eti, Süt, Türk Kahvesi ve Baharatlar' },
+          { name: 'Saray Usulü Tavuk', price: '570', description: 'Fıstıklı Kuş Üzümlü Tavuk Sarma Portakal Sos Eşliğinde', glutenFree: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'konya',
+    title: 'Konya Mutfağı',
+    sections: [
+      {
+        title: 'Çorba',
+        items: [
+          { name: 'Bamya Çorbası', price: '440', description: 'Un, Yağ, Kuru Soğan, Kurutulmuş Çiçek Bamya, Dana Eti ve Baharatlar' },
+        ],
+      },
+      {
+        title: 'Ana Yemekler',
+        items: [
+          { name: 'Kuyu Tandır Kebabı', price: '740', description: 'Kuyu Tandırda Bakır Tencere İçerisinde Kendi Yağında Hiçbir Katkı Kullanılmadan 8-10 Saat Aralığında Pişirilmiş Kemiksiz Kuzu Eti' },
+          { name: 'Güveçte Et Tiridi', price: '740', description: 'Toprak Güveç Kabın İçerisinde Küp Doğranmış Pide Üzerine Yoğurt, Sumaklı Soğan, Dana Kavurma, Maydonoz, Tereyağı ve Baharatlar' },
+        ],
+      },
+      {
+        title: 'Dört Mutfak Tadım Menüsü',
+        items: [
+          { name: 'Dört Mutfak Tadım Menüsü', price: '1790', description: 'En az 2 kişilik. 4 çeşit çorba, 3 çeşit ara sıcak veya soğuk, 5 çeşit şerbet, kişi sayısına göre 4-7 çeşit ana yemek, 3 çeşit tatlı, salata, çay, su. Servis edilen tüm yemeklerin hikayeleri masada şeflerimiz tarafından anlatılacaktır.', note: 'Kişi başı' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'vejetaryen',
+    title: 'Vejetaryen',
+    sections: [
+      {
+        title: 'Çorbalar',
+        items: [
+          { name: 'Çeşmi Nigar Çorbası', price: '280', description: 'Mısır Unu, Mercimek, Sarımsak, Soğan ve Baharatlar' },
+        ],
+      },
+      {
+        title: 'Ara Sıcaklar',
+        items: [
+          { name: 'Patatesli Sıkma', price: '340', description: 'Kızartılmış Lavaş İçerisinde Patates, Marul ve Baharatlar' },
+          { name: 'Konya Yeşil Peynirli Sıkma', price: '340', description: 'Kızartılmış Lavaş İçerisinde Konya Yeşil Peyniri, Kaşar Peyniri ve Baharatlar' },
+          { name: 'Közlenmiş Patlıcanlı Biberli Sıkma', price: '340', description: 'Kızartılmış Lavaş İçerisinde Közlenmiş Patlıcan, Közlenmiş Kırmızı Biber ve Baharatlar' },
+          { name: 'Ispanaklı Peynirli Kalem Böreği', price: '290', description: 'El Açması Yufka, Sütte Haşlanmış Ispanak, Kaşar Peyniri ve Tulum Peyniri' },
+          { name: 'Safranlı Bademli Bulgur Pilavı', price: '340', description: 'Bulgur, Safran Zerdeçal, Bitkisel Yağ, Badem' },
+          { name: 'Tahinli Humus', price: '340', description: 'Nohut, Tahin, Sarımsak, Limon Suyu, Zeytinyağı, Tuz ve Baharatlar' },
+          { name: 'Cevizli Haydari', price: '340', description: 'Ceviz, Yoğurt, Közlenmiş Patlıcan, Zeytinyağı, Sarımsak, Dereotu, Tuz ve Baharatlar' },
+          { name: 'Vişneli Yaprak Sarma', price: '390', description: 'Asma Yaprağı, Vişne, Tarçın, Pirinç, Salça, Zeytinyağı ve Baharatlar', glutenFree: true },
+        ],
+      },
+      {
+        title: 'Ana Yemekler',
+        items: [
+          { name: 'Hasseten Lokma', price: '590', description: 'Pirinç, Kuru İncir, Kuş Üzümü, Badem, Fıstık ve Baharatlar', glutenFree: true },
+          { name: 'Kırmızı Pancar Yemeği', price: '390', description: 'Kırmızı Pancar, Zeytinyağı, Yoğurt ve Baharatlar', glutenFree: true },
+          { name: 'Ispanak Boranisi', price: '390', description: 'Ispanak, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Patlıcan Kalyesi', price: '390', description: 'Güneşte Kurutulmuş Patlıcan, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Fasülye Kalyesi', price: '390', description: 'Güneşte Kurutulmuş Fasülye, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Biber Kalyesi', price: '390', description: 'Güneşte Kurutulmuş Biber, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Karışık Kalye Tabağı', price: '490', description: 'Güneşte Kurutulmuş Patlıcan, Biber, Fasülye, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'vegan',
+    title: 'Vegan',
+    sections: [
+      {
+        title: 'Çorba',
+        items: [
+          { name: 'Çeşmi Nigar Çorbası', price: '280', description: 'Mısır Unu, Mercimek, Sarımsak, Soğan ve Baharatlar' },
+        ],
+      },
+      {
+        title: 'Ara Sıcaklar',
+        items: [
+          { name: 'Patatesli Sıkma', price: '340', description: 'Kızartılmış Lavaş İçerisinde Patates, Marul ve Baharatlar' },
+          { name: 'Közlenmiş Patlıcanlı Biberli Sıkma', price: '340', description: 'Kızartılmış Lavaş İçerisinde Közlenmiş Patlıcan, Közlenmiş Kırmızı Biber ve Baharatlar' },
+          { name: 'Safranlı Bademli Bulgur Pilavı', price: '340', description: 'Bulgur, Safran Zerdeçal, Bitkisel Yağ, Badem' },
+          { name: 'Tahinli Humus', price: '340', description: 'Nohut, Tahin, Sarımsak, Limon Suyu, Zeytinyağı, Tuz ve Baharatlar' },
+          { name: 'Vişneli Yaprak Sarma', price: '390', description: 'Asma Yaprağı, Vişne, Tarçın, Pirinç, Salça, Zeytinyağı ve Baharatlar', glutenFree: true },
+        ],
+      },
+      {
+        title: 'Ana Yemekler',
+        items: [
+          { name: 'Hasseten Lokma', price: '590', description: 'Pirinç, Kuru İncir, Kuş Üzümü, Badem, Fıstık ve Baharatlar', glutenFree: true },
+          { name: 'Kırmızı Pancar Yemeği', price: '390', description: 'Kırmızı Pancar, Zeytinyağı ve Baharatlar', glutenFree: true },
+          { name: 'Ispanak Borani', price: '390', description: 'Ispanak, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Patlıcan Kalyesi', price: '390', description: 'Güneşte Kurutulmuş Patlıcan, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Fasülye Kalyesi', price: '390', description: 'Güneşte Kurutulmuş Fasülye, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Biber Kalyesi', price: '390', description: 'Güneşte Kurutulmuş Biber, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+          { name: 'Karışık Kalye Tabağı', price: '490', description: 'Güneşte Kurutulmuş Patlıcan, Biber, Fasülye, Kuru Soğan, Bitkisel Yağ ve Baharatlar', glutenFree: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'kahvalti',
+    title: 'Kahvaltı',
+    sections: [
+      {
+        title: null,
+        items: [
+          { name: 'Soğuk Serpme Kahvaltı', price: '590', description: 'Top Peyniri, Kaşar, Süzme Peynir, Konya Yeşil Peynir, Yeşil Biberli Zeytin, Siyah Zeytin, Bal, Kaymak, Tereyağı, Köpük Helva, Ceviz, Ev yapımı reçeller, domates, salatalık, mevsim meyvesi, tahin, pekmez. En az iki kişilik.', note: 'Kişi başı' },
+          { name: 'Kahvaltı Tabağı', price: '640', description: 'Kaşar, Süzme Peynir, Konya Yeşil Peynir, Yeşil Biberli Zeytin, Siyah Zeytin, Bal, Kaymak, Tereyağı, Köpük Helva, ev yapımı reçeller, domates, salatalık, mevsim meyvesi, tahin, pekmez, Patates Kızartması, Paçanga Böreği, Haşlanmış Yumurta' },
+          { name: 'Serpme Sultan Kahvaltısı', price: '690', description: 'Sucuklu Yumurta, Kavurmalı Yumurta, Çömlekte Menemen, Paçanga Böreği, Kalem Böreği, Patates Kızartması, Top Peyniri, Kaşar, Süzme Peynir, Konya Yeşil Peynir, Yeşil Biberli Zeytin, Siyah Zeytin, Bal, Kaymak, Tereyağı, Köpük Helva, ev yapımı reçeller, domates, salatalık, mevsim meyvesi, tahin, pekmez, ceviz, Sınırsız Çay ve Su. En az iki kişilik.', note: 'Kişi başı' },
+          { name: 'Tereyağlı Çılbır', price: '240' },
+          { name: 'Paçanga Böreği', price: '290' },
+          { name: 'Ispanaklı Sütlü Börek', price: '290' },
+          { name: 'Patates Kızartması', price: '290' },
+          { name: 'Sade Omlet / Peynirli Omlet', price: '240' },
+          { name: 'Omlet Çeşitleri', price: '290', description: 'Kavurmalı, Sucuklu, Pastırmalı, Mantarlı' },
+          { name: 'Sahanda Yumurta', price: '240' },
+          { name: 'Kavurmalı Yumurta', price: '390' },
+          { name: 'Çömlekte Sucuklu Yumurta', price: '340' },
+          { name: 'Çömlek Menemen', price: '290' },
+          { name: 'Çömlekte Sucuk', price: '340' },
+          { name: 'Çömlekte Sade Kavurma', price: '340' },
+          { name: 'Çömlekte Kaşarlı Mantar', price: '340' },
+          { name: 'Taze Sıkma Meyve Suyu', price: '195' },
+          { name: 'Süt', price: '95' },
+          { name: 'Termos Çay', price: '290' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'soguk-icecekler',
+    title: 'Soğuk İçecekler',
+    sections: [
+      {
+        title: 'Şerbetler',
+        items: [
+          { name: 'Reyhan Şerbeti', price: '130' },
+          { name: 'Sirkencübin Şerbeti', price: '130' },
+          { name: 'Gül Şerbeti', price: '130' },
+          { name: 'Demirhindi Şerbeti', price: '130' },
+          { name: 'Nar Şerbeti', price: '130' },
+        ],
+      },
+      {
+        title: 'İçecekler',
+        items: [
+          { name: 'Ayran', price: '95' },
+          { name: 'Şalgam', price: '95' },
+          { name: 'Taze Sıkma Meyve Suyu', price: '195' },
+          { name: 'Sade Soda', price: '95' },
+          { name: 'Limonlu Soda', price: '95' },
+          { name: 'Küçük Su', price: '48' },
+          { name: 'Büyük Su', price: '95' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'salata-tatli',
+    title: 'Salata ve Tatlılar',
+    sections: [
+      {
+        title: 'Salatalar',
+        items: [
+          { name: 'Gül Yapraklı Marul Salatası', price: '340', description: 'Akdeniz Marulu, Kıvırcık Marul, Dereotu, Gül Yaprağı, Zeytinyağı Limon Sosu, Nar Ekşisi', glutenFree: true },
+          { name: 'Çoban Salatası', price: '340', description: 'Kuru Soğan, Domates, Salatalık, Biber, Zeytinyağı, Limon Sosu, Nar Ekşisi', glutenFree: true },
+          { name: 'Taze Meyveli Mevsim Salatası', price: '390', description: 'Mevsim Meyveleri, Kıvırcık Marul, Zeytinyağı, Limon Sosu, Nar Ekşisi', glutenFree: true },
+          { name: 'Kuru Meyveli Cevizli Salata', price: '390', description: 'Akdeniz Marulu, Kıvırcık Marul, Kuru İncir, Kuru Üzüm, Kayısı Kurusu, Ceviz, Zeytinyağı, Limon Sosu, Nar Ekşisi', glutenFree: true },
+          { name: '3 Peynirli Yeşillik Salatası', price: '390', description: 'Akdeniz Marulu, Kıvırcık Marul, Beyaz Peynir, Tulum Peyniri, Süzme Peynir, Zeytinyağı, Limon Sosu, Nar Ekşisi', glutenFree: true },
+          { name: 'Yoğurt', price: '290', glutenFree: true },
+          { name: 'Cacık', price: '290', glutenFree: true },
+          { name: 'Karışık Turşu', price: '290', glutenFree: true },
+        ],
+      },
+      {
+        title: 'Tatlılar',
+        items: [
+          { name: 'Ballı Güllü Badem Helvası', price: '340' },
+          { name: 'Tahinli Cevizli Kabak Tatlısı', price: '340', glutenFree: true },
+          { name: 'Antep Fıstıklı Kaymaklı Firuze', price: '340' },
+          { name: 'Maraş Kesme Dondurma', price: '290', glutenFree: true },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'sicak-icecekler',
+    title: 'Sıcak İçecekler',
+    sections: [
+      {
+        title: null,
+        items: [
+          { name: 'Bardak Çay', price: '48' },
+          { name: 'Fincan Çay', price: '78' },
+          { name: 'Türk Kahvesi', price: '125' },
+          { name: 'Menengiç Kahvesi', price: '125' },
+          { name: 'Dibek Kahvesi', price: '125' },
+          { name: 'Nescafe', price: '125' },
+          { name: 'Filtre Kahve', price: '145' },
+          { name: 'Sütlü Filtre Kahve', price: '145' },
+          { name: 'Sahlep', price: '145' },
+          { name: 'Sıcak Süt', price: '95' },
+          { name: 'Sıcak Ballı Süt', price: '125' },
+          { name: 'Yeşil Çay', price: '145' },
+          { name: 'Adaçayı', price: '145' },
+          { name: 'Ihlamur', price: '145' },
+          { name: 'Hibiskus', price: '145' },
+          { name: 'Earl Grey', price: '145' },
+          { name: 'Papatya', price: '145' },
+          { name: 'Nane Limon', price: '145' },
+          { name: 'Elma Çayı', price: '145' },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'cocuk-menu',
+    title: 'Çocuk Menüsü',
+    sections: [
+      {
+        title: null,
+        items: [
+          { name: 'Mutlu Mercimek Çorbası', price: '240', description: 'Mısır Unlu Mercimek Çorbası' },
+          { name: 'Minik Kaptan Yemeği', price: '590', description: 'Patates Cipsi Eşliğinde Norveç Somonu' },
+          { name: 'Pilav Dağında Et Macerası', price: '590', description: 'Pilav Üstü Dana Kavurma' },
+          { name: 'Köfte ve Patates Krallığı', price: '490', description: 'Patates Cipsi Eşliğinde Izgara Köfte' },
+          { name: 'Çılgın Tavuklu Makarna', price: '440', description: 'Kremalı Tavuklu Kalem Makarna' },
+          { name: 'Peynir Toplu Neşeli Makarna', price: '360', description: 'Top Peynirli Sade Makarna' },
+          { name: 'Ponçik Patates Sepeti', price: '240', description: 'Parmak Patates Cipsi' },
+          { name: 'Pofuduk Donat', price: '240', description: 'Çilek veya Çikolata Dolgulu Donat' },
+        ],
+      },
+    ],
+  },
+]
