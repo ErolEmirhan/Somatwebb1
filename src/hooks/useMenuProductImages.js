@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { isFirebaseConfigured } from '../config/firebase'
 import { menuPanels as localMenuPanels } from '../data/menuData'
 import { fetchMenuPanelsFromFirestore } from '../services/menuFromFirestore'
 import {
@@ -31,9 +32,17 @@ export function useMenuProductImages() {
   const [panels, setPanels] = useState(localMenuPanels)
 
   useEffect(() => {
+    if (import.meta.env.PROD && !isFirebaseConfigured()) {
+      console.warn(
+        '[Sultan Somatı] VITE_FIREBASE_* ortam değişkenleri yok; ürün görselleri Firestore’dan gelmiyor. Vercel → Settings → Environment Variables ile .env’deki tüm VITE_ değişkenlerini ekleyip yeniden deploy edin.'
+      )
+    }
     let cancelled = false
     fetchMenuPanelsFromFirestore().then((r) => {
       if (cancelled) return
+      if (import.meta.env.PROD && r.error) {
+        console.warn('[Sultan Somatı] Firestore menü okunamadı, yerel menü kullanılıyor:', r.error)
+      }
       if (Array.isArray(r.panels) && r.panels.length > 0) setPanels(r.panels)
     })
     return () => {
