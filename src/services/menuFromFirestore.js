@@ -39,6 +39,15 @@ function normCatId(v) {
 function readImage(raw) {
   let img = raw?.image ?? raw?.imageBase64 ?? raw?.photo ?? raw?.gorsel
   if (img != null && typeof img === 'object') {
+    const mimeRaw = img.mime ?? img.mimeType ?? img.contentType ?? img.type
+    const mime = mimeRaw != null ? String(mimeRaw).trim() : ''
+    const body = img.base64 ?? img.data ?? img.url ?? img.src
+    if (mime.includes('/') && body != null && typeof body === 'string') {
+      const clean = String(body).replace(/\s/g, '')
+      if (clean.startsWith('data:')) return clean
+      if (clean.startsWith('http://') || clean.startsWith('https://')) return clean
+      return `data:${mime};base64,${clean}`
+    }
     img = img.base64 ?? img.data ?? img.url ?? img.src
   }
   if (img == null) return undefined
