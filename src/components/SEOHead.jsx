@@ -25,7 +25,11 @@ export default function SEOHead() {
       <meta property="og:image:alt" content={`${BRAND.name} — resmî logo`} />
       <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
       <meta name="twitter:image:alt" content={`${BRAND.name} — resmî logo`} />
-      <link rel="icon" type="image/png" sizes="any" href={BRAND_LOGO_PATH} />
+      <link rel="icon" type="image/png" href={BRAND_LOGO_PATH} sizes="48x48" />
+      <link rel="icon" type="image/png" href={BRAND_LOGO_PATH} sizes="32x32" />
+      <link rel="icon" type="image/png" href={BRAND_LOGO_PATH} sizes="192x192" />
+      <link rel="shortcut icon" type="image/png" href={BRAND_LOGO_PATH} />
+      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
       <link rel="apple-touch-icon" href={BRAND_LOGO_PATH} />
     </Helmet>
   )
