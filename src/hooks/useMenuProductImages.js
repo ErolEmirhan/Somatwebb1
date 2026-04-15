@@ -4,10 +4,9 @@ import { fetchMenuPanelsFromFirestore } from '../services/menuFromFirestore'
 import {
   collectMenuProductImages,
   dedupeMenuProductImages,
-  padImageSources,
 } from '../utils/collectMenuProductImages'
 
-/** Menüde görsel yokken hero / galeri için yedek (önceki site görselleri) */
+/** Menüde görsel yokken galeri / kart yedekleri için Unsplash URL’leri */
 export const MENU_VISUAL_FALLBACK_URLS = [
   'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1920&q=80',
   'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1920&q=80',
@@ -49,16 +48,6 @@ export function useMenuProductImages() {
     [panels]
   )
 
-  const heroUrls = useMemo(
-    () =>
-      padImageSources(
-        entries.map((e) => e.src),
-        4,
-        MENU_VISUAL_FALLBACK_URLS
-      ),
-    [entries]
-  )
-
   const galleryCategories = useMemo(() => {
     const base = [{ id: 'all', name: 'Tümü' }]
     const seen = new Set()
@@ -73,5 +62,10 @@ export function useMenuProductImages() {
     return base
   }, [entries])
 
-  return { entries, heroUrls, galleryCategories, fallbacks: MENU_VISUAL_FALLBACK_URLS }
+  return {
+    entries,
+    galleryCategories,
+    fallbacks: MENU_VISUAL_FALLBACK_URLS,
+    panels,
+  }
 }

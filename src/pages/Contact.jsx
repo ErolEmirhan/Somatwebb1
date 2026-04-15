@@ -5,6 +5,8 @@ import {
   CONTACT_PHONE_TEL,
   CONTACT_ADDRESS_LINE,
   CONTACT_INSTAGRAM_URL,
+  CONTACT_HOURS_WEEKDAY,
+  CONTACT_HOURS_WEEKEND,
   contactMapsSearchUrl,
   contactMapsEmbedUrl,
 } from '../config/contact'
@@ -32,7 +34,7 @@ export default function Contact() {
     {
       icon: Clock,
       title: 'Çalışma Saatleri',
-      content: 'Pazartesi - Pazar: 12:00 - 00:00',
+      content: `${CONTACT_HOURS_WEEKDAY}\n${CONTACT_HOURS_WEEKEND}`,
       link: null,
     },
   ]
@@ -84,7 +86,7 @@ export default function Contact() {
                           {info.content}
                         </a>
                       ) : (
-                        <p className="text-gray-600">{info.content}</p>
+                        <p className="text-gray-600 whitespace-pre-line">{info.content}</p>
                       )}
                     </div>
                   </motion.div>

@@ -27,6 +27,26 @@ function str(v) {
   return String(v).trim()
 }
 
+/** Menü sayfasında gösterilmeyecek paneller (ör. ekstra / hediyelik satış kategorisi). */
+function shouldHideMenuPanel(panel) {
+  const title = str(panel?.title).toLocaleLowerCase('tr-TR')
+  if (
+    title.includes('ekstralar') ||
+    title.includes('ekstra (') ||
+    title.includes('ekstra ')
+  ) {
+    return true
+  }
+  const id = str(panel?.id).toLowerCase()
+  if (id.includes('ekstralar') || id.includes('ekstra-')) return true
+  return false
+}
+
+function filterPublicMenuPanels(panels) {
+  if (!Array.isArray(panels)) return []
+  return panels.filter((p) => !shouldHideMenuPanel(p))
+}
+
 /** Ürün / kategori eşlemesi: category_id ile categories belgesi (id veya doc id) */
 function normCatId(v) {
   if (v === undefined || v === null || v === '') return '__none__'
@@ -39,15 +59,6 @@ function normCatId(v) {
 function readImage(raw) {
   let img = raw?.image ?? raw?.imageBase64 ?? raw?.photo ?? raw?.gorsel
   if (img != null && typeof img === 'object') {
-    const mimeRaw = img.mime ?? img.mimeType ?? img.contentType ?? img.type
-    const mime = mimeRaw != null ? String(mimeRaw).trim() : ''
-    const body = img.base64 ?? img.data ?? img.url ?? img.src
-    if (mime.includes('/') && body != null && typeof body === 'string') {
-      const clean = String(body).replace(/\s/g, '')
-      if (clean.startsWith('data:')) return clean
-      if (clean.startsWith('http://') || clean.startsWith('https://')) return clean
-      return `data:${mime};base64,${clean}`
-    }
     img = img.base64 ?? img.data ?? img.url ?? img.src
   }
   if (img == null) return undefined
@@ -492,7 +503,7 @@ export async function fetchMenuPanelsFromFirestore() {
       )
     }
     return {
-      panels: localMenuPanels,
+      panels: filterPublicMenuPanels(localMenuPanels),
       usedFallback: true,
       error: null,
     }
@@ -518,7 +529,7 @@ export async function fetchMenuPanelsFromFirestore() {
         )
       }
       return {
-        panels: localMenuPanels,
+        panels: filterPublicMenuPanels(localMenuPanels),
         usedFallback: true,
         error: null,
       }
@@ -528,14 +539,14 @@ export async function fetchMenuPanelsFromFirestore() {
       console.info(`[menu] Firestore (${source}): ${list.length} panel yüklendi.`)
     }
     return {
-      panels: sortPanels(list),
+      panels: sortPanels(filterPublicMenuPanels(list)),
       usedFallback: false,
       error: null,
     }
   } catch (e) {
     console.error('[menu] Firestore menü okuma hatası:', e)
     return {
-      panels: localMenuPanels,
+      panels: filterPublicMenuPanels(localMenuPanels),
       usedFallback: true,
       error: e?.message || String(e),
     }

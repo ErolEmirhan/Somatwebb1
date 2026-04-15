@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async'
 import { useLocation } from 'react-router-dom'
+import { BRAND, BRAND_LOGO_PATH } from '../config/brand'
 import { PAGE_SEO, SITE_URL, DEFAULT_META, DEFAULT_OG_IMAGE } from '../seo.config'
 
 export default function SEOHead() {
@@ -20,7 +21,12 @@ export default function SEOHead() {
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta property="og:image" content={DEFAULT_OG_IMAGE} />
+      <meta property="og:image:type" content="image/png" />
+      <meta property="og:image:alt" content={`${BRAND.name} — resmî logo`} />
       <meta name="twitter:image" content={DEFAULT_OG_IMAGE} />
+      <meta name="twitter:image:alt" content={`${BRAND.name} — resmî logo`} />
+      <link rel="icon" type="image/png" sizes="any" href={BRAND_LOGO_PATH} />
+      <link rel="apple-touch-icon" href={BRAND_LOGO_PATH} />
     </Helmet>
   )
 }

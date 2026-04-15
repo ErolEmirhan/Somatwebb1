@@ -5,6 +5,8 @@ import {
   CONTACT_PHONE_DISPLAY,
   CONTACT_PHONE_TEL,
   CONTACT_ADDRESS_LINE,
+  CONTACT_HOURS_WEEKDAY,
+  CONTACT_HOURS_WEEKEND,
   contactMapsSearchUrl,
 } from '../config/contact'
 
@@ -68,7 +70,8 @@ export default function Order() {
                 <Clock className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
                 <div>
                   <span className="block text-sm text-gray-500 font-medium">Çalışma Saatleri</span>
-                  <p className="text-gray-900">Pazartesi - Pazar: 12:00 - 00:00</p>
+                  <p className="text-gray-900 mt-1">{CONTACT_HOURS_WEEKDAY}</p>
+                  <p className="text-gray-900">{CONTACT_HOURS_WEEKEND}</p>
                 </div>
               </div>
 

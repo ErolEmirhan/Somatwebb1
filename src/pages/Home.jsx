@@ -1,53 +1,40 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
-import { ArrowRight, Star } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { useState, useEffect, useMemo } from 'react'
 import { BRAND } from '../config/brand'
 import { CONTACT_PHONE_DISPLAY, CONTACT_PHONE_TEL } from '../config/contact'
 import BrandLogo from '../components/BrandLogo'
+import { HERO_SECTION_BACKGROUNDS } from '../config/heroBackgrounds'
 import { useMenuProductImages } from '../hooks/useMenuProductImages'
-import { padImageSources } from '../utils/collectMenuProductImages'
-
-const CONCEPT_DEFS = [
-  {
-    title: 'Ana Yemekler',
-    description: 'Şefimizin özenle hazırladığı günlük taze malzemelerle sunulan ana yemekler',
-  },
-  {
-    title: 'Izgaralar',
-    description: 'Özel marine edilmiş et ve deniz ürünleri, ızgara lezzetleri',
-  },
-  {
-    title: 'Tatlılar',
-    description: 'Ev yapımı tatlılar ve özel sunumlarla tatlı menümüz',
-  },
-]
-
-const testimonials = [
-  {
-    name: 'Elif Kaya',
-    text: 'Atmosferi ve yemek kalitesi harikaydı. Özellikle ızgara köfteleri ve tatlıları çok beğendik. Kesinlikle tekrar geleceğiz.',
-    rating: 5,
-  },
-  {
-    name: 'Can Öztürk',
-    text: 'Restoran hem şık hem sıcak. Menü çeşitli, porsiyonlar doyurucu. Personel ilgili ve profesyonel. Tavsiye ederim.',
-    rating: 5,
-  },
-]
+import { buildHomeMenuCategoryCards } from '../utils/homeMenuCategoryCards'
 
 export default function Home() {
-  const { entries, heroUrls, fallbacks } = useMenuProductImages()
+  const { fallbacks, panels } = useMenuProductImages()
+  const heroUrls = HERO_SECTION_BACKGROUNDS
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  const concepts = useMemo(() => {
-    const imgs = padImageSources(
-      entries.map((e) => e.src),
-      3,
-      fallbacks
-    )
-    return CONCEPT_DEFS.map((c, i) => ({ ...c, image: imgs[i] }))
-  }, [entries, fallbacks])
+  const menuCategoryCards = useMemo(() => {
+    const built = buildHomeMenuCategoryCards(panels)
+    const slotImages = built.map((b) => b.image)
+    const seen = new Set()
+    const filled = slotImages.map((url) => {
+      if (url) {
+        seen.add(url)
+        return url
+      }
+      return null
+    })
+    let fi = 0
+    for (let i = 0; i < filled.length; i++) {
+      if (filled[i]) continue
+      while (fi < fallbacks.length && seen.has(fallbacks[fi])) fi++
+      const u = fallbacks[fi++] ?? fallbacks[0]
+      filled[i] = u
+      seen.add(u)
+    }
+    return built.map((b, i) => ({ ...b, image: filled[i] }))
+  }, [panels, fallbacks])
 
   useEffect(() => {
     setCurrentImageIndex(0)
@@ -116,7 +103,7 @@ export default function Home() {
               <BrandLogo
                 variant="hero"
                 alt=""
-                className="mx-auto shadow-[0_8px_32px_rgba(0,0,0,0.45)] ring-white/25"
+                className="mx-auto drop-shadow-[0_8px_32px_rgba(0,0,0,0.45)]"
               />
             </motion.div>
 
@@ -221,9 +208,9 @@ export default function Home() {
           </motion.div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {concepts.map((concept, index) => (
+            {menuCategoryCards.map((concept, index) => (
               <motion.div
-                key={concept.title}
+                key={concept.key}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -243,49 +230,13 @@ export default function Home() {
                 <div className="p-6">
                   <p className="text-gray-600 mb-4">{concept.description}</p>
                   <Link
-                    to="/menu"
+                    to={`/menu#menu-panel-${concept.menuPanelId}`}
                     className="inline-flex items-center text-amber-600 font-semibold hover:text-amber-700 transition-colors"
                   >
                     Menüyü İncele
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Link>
                 </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-24 bg-white">
-        <div className="container-custom">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="section-title">Misafir Yorumları</h2>
-            <p className="section-subtitle">Deneyimlerini paylaşan misafirlerimiz</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-            {testimonials.map((t, index) => (
-              <motion.div
-                key={t.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-gray-50 rounded-2xl p-8 hover:shadow-xl transition-shadow duration-300"
-              >
-                <div className="flex mb-4">
-                  {[...Array(t.rating)].map((_, i) => (
-                    <Star key={i} className="w-5 h-5 fill-amber-500 text-amber-500" />
-                  ))}
-                </div>
-                <p className="text-gray-700 mb-6 leading-relaxed italic">"{t.text}"</p>
-                <div className="font-semibold text-gray-900">{t.name}</div>
               </motion.div>
             ))}
           </div>
@@ -305,7 +256,7 @@ export default function Home() {
                 href={CONTACT_PHONE_TEL}
                 className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-amber-700 font-semibold py-4 px-10 rounded-full transition-all duration-300"
               >
-                Hemen Ara · {CONTACT_PHONE_DISPLAY}
+                Rezervasyon için… · {CONTACT_PHONE_DISPLAY}
               </a>
               <Link
                 to="/menu"

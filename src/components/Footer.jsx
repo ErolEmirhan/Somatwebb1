@@ -5,6 +5,8 @@ import {
   CONTACT_PHONE_DISPLAY,
   CONTACT_PHONE_TEL,
   CONTACT_ADDRESS_LINE,
+  CONTACT_HOURS_WEEKDAY,
+  CONTACT_HOURS_WEEKEND,
   contactMapsSearchUrl,
 } from '../config/contact'
 import BrandLogo from './BrandLogo'
@@ -30,11 +32,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16">
           <div>
             <div className="flex items-center gap-4 mb-8">
-              <BrandLogo
-                variant="footer"
-                alt=""
-                surfaceClass="bg-amber-950/85 ring-2 ring-amber-500/35"
-              />
+              <BrandLogo variant="footer" alt="" />
               <div>
                 <p className="font-display font-bold text-xl text-white tracking-tight">{BRAND.name}</p>
                 <p className="text-amber-400/90 text-sm mt-1 max-w-xs">{BRAND.shortDescription}</p>
@@ -93,14 +91,14 @@ export default function Footer() {
           <div>
             <h4 className="text-lg sm:text-xl font-bold mb-6 text-white tracking-tight">Çalışma Saatleri</h4>
             <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="bg-gradient-to-br from-amber-500/20 to-amber-600/20 backdrop-blur-sm p-3 rounded-xl border border-amber-500/30 flex-shrink-0">
+              <div className="flex items-start gap-4 bg-gradient-to-r from-amber-500/15 to-amber-600/15 backdrop-blur-sm rounded-2xl px-6 py-4 border border-amber-500/25">
+                <div className="bg-gradient-to-br from-amber-500/20 to-amber-600/20 backdrop-blur-sm p-3 rounded-xl border border-amber-500/30 flex-shrink-0 mt-0.5">
                   <Clock className="w-5 h-5 text-amber-400" />
                 </div>
-                <span className="text-gray-300 text-sm sm:text-base">Pazartesi - Pazar</span>
-              </div>
-              <div className="bg-gradient-to-r from-amber-500/15 to-amber-600/15 backdrop-blur-sm rounded-2xl px-6 py-4 border border-amber-500/25">
-                <span className="text-amber-400 font-bold text-xl sm:text-2xl tracking-wide">12:00 - 00:00</span>
+                <div className="space-y-3 min-w-0 flex-1">
+                  <p className="text-amber-400 font-bold text-lg sm:text-xl tracking-wide">{CONTACT_HOURS_WEEKDAY}</p>
+                  <p className="text-amber-400 font-bold text-lg sm:text-xl tracking-wide">{CONTACT_HOURS_WEEKEND}</p>
+                </div>
               </div>
               <p className="text-gray-400 text-xs sm:text-sm pt-2">Her gün sizlere hizmet vermekten mutluluk duyuyoruz.</p>
             </div>
@@ -114,7 +112,7 @@ export default function Footer() {
           </p>
           <div className="flex flex-col md:flex-row justify-center items-center gap-4">
             <p className="text-gray-400 text-xs sm:text-sm font-medium">
-              © {new Date().getFullYear()} {BRAND.legalName}. Tüm hakları saklıdır.
+              2026 Emirhan Erol Tüm hakları saklıdır
             </p>
           </div>
         </div>

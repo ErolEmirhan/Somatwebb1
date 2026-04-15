@@ -1,5 +1,5 @@
-/** Müessese adı ve logo (public klasöründen servis edilir) */
-export const BRAND_LOGO_PATH = '/451374397_509673744847592_2602871353181542479_n.jpg'
+/** Resmî logo (public/logo.png). Favicon, Open Graph, Twitter ve sitedeki tüm marka görselleri bu dosyayı kullanır. */
+export const BRAND_LOGO_PATH = '/logo.png'
 
 export const BRAND = {
   name: 'Sultan Somatı',

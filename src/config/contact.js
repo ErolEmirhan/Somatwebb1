@@ -11,6 +11,10 @@ export const CONTACT_MAP_LNG = 32.50383058386916
 /** Kısa adres satırı (tam sokak bilgisi yok; konum haritada) */
 export const CONTACT_ADDRESS_LINE = 'Sultan Somatı · Konya'
 
+/** Çalışma saatleri (footer, iletişim, rezervasyon) */
+export const CONTACT_HOURS_WEEKDAY = 'Hafta içi: 11.00 – 21.30'
+export const CONTACT_HOURS_WEEKEND = 'Hafta sonu: 10.00 – 21.30'
+
 export function contactMapsSearchUrl() {
   return `https://www.google.com/maps/search/?api=1&query=${CONTACT_MAP_LAT},${CONTACT_MAP_LNG}`
 }
