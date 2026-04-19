@@ -8,6 +8,10 @@ import BrandLogo from '../components/BrandLogo'
 import { HERO_SECTION_BACKGROUNDS } from '../config/heroBackgrounds'
 import { useMenuProductImages } from '../hooks/useMenuProductImages'
 import { buildHomeMenuCategoryCards } from '../utils/homeMenuCategoryCards'
+import {
+  CategoryLuxuryLeftRail,
+  CategoryLuxuryTriangleFlag,
+} from '../components/CategoryLuxuryLeftMark'
 
 export default function Home() {
   const { fallbacks, panels } = useMenuProductImages()
@@ -216,8 +220,9 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -10 }}
-                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
               >
+                <CategoryLuxuryLeftRail />
                 <div className="relative h-64 overflow-hidden">
                   <img
                     src={concept.image}
@@ -225,7 +230,10 @@ export default function Home() {
                     className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <h3 className="absolute bottom-4 left-6 text-2xl font-display font-bold text-white">{concept.title}</h3>
+                  <CategoryLuxuryTriangleFlag />
+                  <h3 className="absolute bottom-4 left-6 z-10 text-2xl font-display font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]">
+                    {concept.title}
+                  </h3>
                 </div>
                 <div className="p-6">
                   <p className="text-gray-600 mb-4">{concept.description}</p>

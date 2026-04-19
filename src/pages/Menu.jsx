@@ -1,21 +1,14 @@
 import { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import {
-  ChevronDown,
-  UtensilsCrossed,
-  Landmark,
-  Leaf,
-  Sun,
-  CupSoda,
-  Salad,
-  Coffee,
-  Sparkles,
-  Crown,
-} from 'lucide-react'
+import { ChevronDown, UtensilsCrossed } from 'lucide-react'
 import { getPanelCoverImage } from '../data/menuPanelCovers'
 import MenuProductThumbnail from '../components/MenuProductThumbnail'
 import MenuProductImagePreview from '../components/MenuProductImagePreview'
+import {
+  CategoryLuxuryLeftRail,
+  CategoryLuxuryTriangleFlag,
+} from '../components/CategoryLuxuryLeftMark'
 import { fetchMenuPanelsFromFirestore } from '../services/menuFromFirestore'
 import { BRAND } from '../config/brand'
 
@@ -124,23 +117,6 @@ function MenuLoadingScreen() {
   )
 }
 
-const panelIcons = {
-  'selcuklu-mevlevi': Landmark,
-  osmanli: Crown,
-  konya: Landmark,
-  vejetaryen: Leaf,
-  vegan: Leaf,
-  kahvalti: Sun,
-  'soguk-icecekler': CupSoda,
-  'salata-tatli': Salad,
-  'sicak-icecekler': Coffee,
-  'cocuk-menu': Sparkles,
-}
-
-function getPanelIcon(panelId) {
-  return panelIcons[panelId] || UtensilsCrossed
-}
-
 export default function Menu() {
   const location = useLocation()
   const [expandedPanels, setExpandedPanels] = useState(new Set())
@@ -197,7 +173,7 @@ export default function Menu() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="overflow-hidden min-h-screen bg-gradient-to-b from-amber-50/40 via-white to-amber-50/30"
+      className="overflow-hidden min-h-screen bg-gradient-to-b from-neutral-50 via-white to-neutral-100/80"
     >
       <MenuProductImagePreview
         open={Boolean(imagePreview)}
@@ -207,17 +183,16 @@ export default function Menu() {
         sectionTitle={imagePreview?.sectionTitle}
       />
 
-      {/* Panel list — geniş kartlar, arka plan görseli + sarı gradient overlay */}
+      {/* Panel list — eşit yükseklik, fotoğraf + alttan ~%68 siyah gradient, ortalanmış başlık */}
       <section className="pt-20 sm:pt-24 md:pt-28 pb-24 px-3 sm:px-5 md:px-8 lg:px-10 xl:px-12">
         {menuLoadError && (
-          <p className="text-center text-amber-900/90 text-sm px-4 mb-6 max-w-2xl mx-auto">
+          <p className="text-center text-neutral-700 text-sm px-4 mb-6 max-w-2xl mx-auto">
             Menü sunucudan alınamadı; yerel veri gösteriliyor. ({menuLoadError})
           </p>
         )}
-        <div className="max-w-[90rem] mx-auto space-y-6 md:space-y-8">
+        <div className="max-w-[90rem] mx-auto space-y-5 md:space-y-6">
           {panels.map((panel, panelIndex) => {
             const isExpanded = expandedPanels.has(panel.id)
-            const Icon = getPanelIcon(panel.id)
             const coverUrl = getPanelCoverImage(panel)
 
             return (
@@ -230,75 +205,61 @@ export default function Menu() {
                 className="relative scroll-mt-24 sm:scroll-mt-28"
               >
                 <div
-                  className="group relative overflow-hidden rounded-3xl border border-amber-300/45 shadow-xl transition-all duration-500"
-                  style={{
-                    boxShadow: isExpanded
-                      ? '0 28px 56px -16px rgba(180, 83, 9, 0.22), 0 0 0 1px rgba(212, 175, 55, 0.35)'
-                      : '0 12px 40px -12px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(212, 175, 55, 0.22)',
-                  }}
+                  className={`group relative overflow-hidden rounded-2xl border border-black/[0.06] bg-white transition-shadow duration-500 ${
+                    isExpanded
+                      ? 'shadow-[0_28px_64px_-18px_rgba(0,0,0,0.28)]'
+                      : 'shadow-[0_20px_50px_-20px_rgba(0,0,0,0.2)] hover:shadow-[0_26px_56px_-20px_rgba(0,0,0,0.26)]'
+                  }`}
                 >
-                  {/* Arka plan: ürün fotoğrafı veya kapak URL (img → data URL güvenli) */}
-                  <img
-                    src={coverUrl}
-                    alt=""
-                    aria-hidden
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.1s] ease-out group-hover:scale-[1.04]"
-                  />
-                  {/* Sarı–altın gradient overlay (profesyonel, modern) */}
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: `linear-gradient(135deg,
-                        rgba(255, 251, 235, 0.93) 0%,
-                        rgba(254, 243, 199, 0.84) 26%,
-                        rgba(252, 211, 77, 0.48) 58%,
-                        rgba(217, 119, 6, 0.32) 100%)`,
-                    }}
-                  />
-                  {/* Üst parlama + alt derinlik */}
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background: `linear-gradient(180deg,
-                        rgba(255, 255, 255, 0.38) 0%,
-                        transparent 38%,
-                        rgba(146, 64, 14, 0.14) 100%)`,
-                    }}
-                  />
+                  <CategoryLuxuryLeftRail />
+                  {/* Kapak şeridi: tüm kategorilerde aynı yükseklik; gradient yalnızca bu bölümde */}
+                  <div className="relative h-32 w-full overflow-hidden bg-neutral-900 sm:h-36 md:h-40">
+                    <img
+                      src={coverUrl}
+                      alt=""
+                      aria-hidden
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.1s] ease-out group-hover:scale-[1.03]"
+                    />
+                    <div
+                      className="pointer-events-none absolute inset-x-0 bottom-0 h-[68%]"
+                      style={{
+                        background:
+                          'linear-gradient(to top, rgba(0,0,0,0.96) 0%, rgba(0,0,0,0.62) 28%, rgba(0,0,0,0.38) 52%, rgba(0,0,0,0.14) 76%, transparent 100%)',
+                      }}
+                      aria-hidden
+                    />
+                    <CategoryLuxuryTriangleFlag />
 
-                  <button
-                    type="button"
-                    onClick={() => togglePanel(panel.id)}
-                    className="relative z-10 w-full flex items-center justify-between gap-5 min-h-[100px] md:min-h-[124px] py-6 md:py-7 px-6 sm:px-10 md:px-12 text-left"
-                  >
-                    <div className="flex items-center gap-5 min-w-0">
-                      <div className="flex-shrink-0 w-16 h-16 md:w-[72px] md:h-[72px] rounded-2xl flex items-center justify-center bg-white/55 backdrop-blur-md border border-amber-300/50 shadow-md">
-                        <Icon className="w-8 h-8 md:w-9 md:h-9 text-amber-800" />
-                      </div>
+                    <button
+                      type="button"
+                      onClick={() => togglePanel(panel.id)}
+                      className="relative z-10 flex h-full w-full items-center justify-center px-14 text-center"
+                    >
                       <h2
-                        className="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-amber-950 tracking-tight"
+                        className="max-w-[min(100%,32rem)] font-display text-2xl font-extrabold leading-tight tracking-tight text-white antialiased sm:text-3xl md:text-4xl"
                         style={{
                           textShadow: `
-                            0 0 2px rgba(255, 255, 255, 1),
-                            0 1px 2px rgba(255, 252, 245, 0.98),
-                            0 2px 6px rgba(255, 251, 235, 0.95),
-                            0 2px 12px rgba(0, 0, 0, 0.35),
-                            0 4px 24px rgba(0, 0, 0, 0.28)
+                            0 0 1px rgba(0, 0, 0, 1),
+                            0 1px 2px rgba(0, 0, 0, 0.95),
+                            0 2px 8px rgba(0, 0, 0, 0.85),
+                            0 4px 18px rgba(0, 0, 0, 0.65),
+                            0 0 42px rgba(0, 0, 0, 0.45)
                           `,
                         }}
                       >
                         {panel.title}
                       </h2>
-                    </div>
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white/55 backdrop-blur-md border border-amber-300/50 flex items-center justify-center text-amber-800 shadow-md transition-colors duration-300 hover:bg-white/75">
-                      <motion.span
-                        animate={{ rotate: isExpanded ? 180 : 0 }}
-                        transition={{ duration: 0.35, ease: 'easeInOut' }}
-                      >
-                        <ChevronDown className="w-6 h-6" />
-                      </motion.span>
-                    </div>
-                  </button>
+                      <span className="pointer-events-none absolute right-4 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/25 text-white backdrop-blur-[2px] sm:right-5 md:right-6">
+                        <motion.span
+                          animate={{ rotate: isExpanded ? 180 : 0 }}
+                          transition={{ duration: 0.35, ease: 'easeInOut' }}
+                          className="flex"
+                        >
+                          <ChevronDown className="h-5 w-5 sm:h-6 sm:w-6" strokeWidth={2} />
+                        </motion.span>
+                      </span>
+                    </button>
+                  </div>
 
                   <AnimatePresence initial={false}>
                     {isExpanded && (
@@ -309,9 +270,9 @@ export default function Menu() {
                         transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
                         className="overflow-hidden"
                       >
-                        <div className="relative z-10 border-t border-amber-200/60 bg-white/80 backdrop-blur-lg rounded-b-3xl">
+                        <div className="relative z-10 border-t border-neutral-200/90 bg-white backdrop-blur-sm">
                           <div
-                            className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-amber-400/70 to-transparent"
+                            className="absolute left-0 right-0 top-0 h-px bg-gradient-to-r from-transparent via-neutral-300/80 to-transparent"
                             aria-hidden
                           />
                           <div className="relative px-6 sm:px-10 md:px-12 pb-10 pt-4">
@@ -324,17 +285,17 @@ export default function Menu() {
                               {section.title && (
                                 <div className="mb-6 sm:mb-7">
                                   <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-                                    <div className="h-px sm:flex-1 bg-gradient-to-r from-transparent via-amber-300/80 to-amber-500/50 sm:max-w-[min(12rem,28%)]" />
+                                    <div className="h-px sm:flex-1 bg-gradient-to-r from-transparent via-neutral-300/90 to-neutral-400/50 sm:max-w-[min(12rem,28%)]" />
                                     <h3 className="relative flex-shrink-0 text-left sm:text-center px-2">
-                                      <span className="block font-display text-lg sm:text-xl font-bold text-amber-950 tracking-tight">
+                                      <span className="block font-display text-lg sm:text-xl font-semibold tracking-tight text-neutral-900">
                                         {section.title}
                                       </span>
                                       <span
-                                        className="mt-2 block h-0.5 w-12 rounded-full bg-gradient-to-r from-amber-500 to-amber-300 sm:mx-auto"
+                                        className="mt-2 block h-px w-10 rounded-full bg-neutral-900/80 sm:mx-auto"
                                         aria-hidden
                                       />
                                     </h3>
-                                    <div className="h-px sm:flex-1 bg-gradient-to-l from-transparent via-amber-300/80 to-amber-500/50 sm:max-w-[min(12rem,28%)]" />
+                                    <div className="h-px sm:flex-1 bg-gradient-to-l from-transparent via-neutral-300/90 to-neutral-400/50 sm:max-w-[min(12rem,28%)]" />
                                   </div>
                                 </div>
                               )}
@@ -346,7 +307,7 @@ export default function Menu() {
                                     initial={{ opacity: 0, x: -8 }}
                                     animate={{ opacity: 1, x: 0 }}
                                     transition={{ delay: index * 0.015, duration: 0.2 }}
-                                    className="flex flex-row items-start gap-3 sm:gap-4 py-4 px-3 sm:px-4 rounded-xl hover:bg-amber-100/50 border border-transparent hover:border-amber-200 transition-all duration-200"
+                                    className="flex flex-row items-start gap-3 sm:gap-4 py-4 px-3 sm:px-4 rounded-xl border border-transparent transition-all duration-200 hover:border-neutral-200/80 hover:bg-neutral-50/90"
                                   >
                                     <MenuProductThumbnail
                                       product={product}
@@ -376,7 +337,7 @@ export default function Menu() {
                                         </p>
                                       )}
                                     </div>
-                                    <span className="text-amber-600 font-bold whitespace-nowrap flex-shrink-0 text-lg tabular-nums pt-0.5">
+                                    <span className="text-neutral-900 font-semibold whitespace-nowrap flex-shrink-0 text-lg tabular-nums pt-0.5">
                                       ₺{product.price}
                                     </span>
                                   </motion.li>
