@@ -211,7 +211,7 @@ export default function Home() {
             <p className="section-subtitle">Taze malzeme ve özenli sunumla hazırlanan lezzetler</p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="mx-auto grid max-w-5xl gap-x-8 gap-y-12 md:grid-cols-2 md:justify-items-center md:gap-y-14 lg:max-w-6xl lg:grid-cols-3 lg:gap-y-16">
             {menuCategoryCards.map((concept, index) => (
               <motion.div
                 key={concept.key}
@@ -220,10 +220,10 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -10 }}
-                className="relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                className="relative w-full max-w-[17.5rem] overflow-hidden rounded-3xl bg-white shadow-lg transition-all duration-300 hover:shadow-2xl sm:max-w-xs"
               >
                 <CategoryLuxuryLeftRail />
-                <div className="relative h-64 overflow-hidden">
+                <div className="relative h-80 overflow-hidden sm:h-[22rem]">
                   <img
                     src={concept.image}
                     alt={concept.title}

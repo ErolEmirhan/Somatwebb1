@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Fragment } from 'react'
 import { useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, UtensilsCrossed } from 'lucide-react'
@@ -11,6 +11,41 @@ import {
 } from '../components/CategoryLuxuryLeftMark'
 import { fetchMenuPanelsFromFirestore } from '../services/menuFromFirestore'
 import { BRAND } from '../config/brand'
+
+/** Kategori kartları arası ince altın motif + nefes payı */
+function MenuCategoryMotifDivider() {
+  return (
+    <div
+      className="mx-auto flex w-full max-w-md flex-col items-center gap-3 py-6 sm:max-w-lg sm:gap-4 sm:py-8 md:py-10"
+      role="presentation"
+      aria-hidden
+    >
+      <div className="flex w-full items-center gap-4 sm:gap-5">
+        <span className="h-[0.5px] min-w-0 flex-1 bg-gradient-to-r from-transparent via-amber-800/40 to-amber-600/30" />
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <span className="h-px w-6 bg-gradient-to-r from-transparent to-amber-700/35 sm:w-8" />
+          <span className="inline-block h-1 w-1 rotate-45 bg-gradient-to-br from-amber-300 to-amber-700 shadow-sm ring-1 ring-amber-900/10" />
+          <span className="inline-block h-1.5 w-1.5 rotate-45 border border-amber-700/45 bg-amber-50/30 shadow-sm" />
+          <span className="inline-block h-1 w-1 rotate-45 bg-gradient-to-br from-amber-300 to-amber-700 shadow-sm ring-1 ring-amber-900/10" />
+          <span className="h-px w-6 bg-gradient-to-l from-transparent to-amber-700/35 sm:w-8" />
+        </div>
+        <span className="h-[0.5px] min-w-0 flex-1 bg-gradient-to-l from-transparent via-amber-800/40 to-amber-600/30" />
+      </div>
+      <div className="flex items-center gap-3 opacity-80">
+        <span className="h-px w-10 bg-gradient-to-r from-transparent via-amber-600/25 to-transparent sm:w-14" />
+        <span className="flex gap-1.5">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <span
+              key={i}
+              className="block h-[3px] w-[3px] rounded-full bg-amber-800/40 ring-1 ring-amber-700/15"
+            />
+          ))}
+        </span>
+        <span className="h-px w-10 bg-gradient-to-l from-transparent via-amber-600/25 to-transparent sm:w-14" />
+      </div>
+    </div>
+  )
+}
 
 function MenuLoadingScreen() {
   const skeletonRows = [0, 1, 2]
@@ -190,22 +225,23 @@ export default function Menu() {
             Menü sunucudan alınamadı; yerel veri gösteriliyor. ({menuLoadError})
           </p>
         )}
-        <div className="max-w-[90rem] mx-auto space-y-5 md:space-y-6">
+        <div className="mx-auto flex w-full max-w-md flex-col px-2 sm:max-w-lg sm:px-0">
           {panels.map((panel, panelIndex) => {
             const isExpanded = expandedPanels.has(panel.id)
             const coverUrl = getPanelCoverImage(panel)
 
             return (
-              <motion.div
-                key={panel.id}
-                id={`menu-panel-${panel.id}`}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: panelIndex * 0.04 }}
-                className="relative scroll-mt-24 sm:scroll-mt-28"
-              >
+              <Fragment key={panel.id}>
+                {panelIndex > 0 ? <MenuCategoryMotifDivider /> : null}
+                <motion.div
+                  id={`menu-panel-${panel.id}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: panelIndex * 0.04 }}
+                  className="relative w-full scroll-mt-24 sm:scroll-mt-28"
+                >
                 <div
-                  className={`group relative overflow-hidden rounded-2xl border border-black/[0.06] bg-white transition-shadow duration-500 ${
+                  className={`group relative overflow-hidden rounded-3xl border border-black/[0.06] bg-white transition-shadow duration-500 ${
                     isExpanded
                       ? 'shadow-[0_28px_64px_-18px_rgba(0,0,0,0.28)]'
                       : 'shadow-[0_20px_50px_-20px_rgba(0,0,0,0.2)] hover:shadow-[0_26px_56px_-20px_rgba(0,0,0,0.26)]'
@@ -213,7 +249,7 @@ export default function Menu() {
                 >
                   <CategoryLuxuryLeftRail />
                   {/* Kapak şeridi: tüm kategorilerde aynı yükseklik; gradient yalnızca bu bölümde */}
-                  <div className="relative h-32 w-full overflow-hidden bg-neutral-900 sm:h-36 md:h-40">
+                  <div className="relative h-44 w-full overflow-hidden bg-neutral-900 sm:h-52 md:h-60">
                     <img
                       src={coverUrl}
                       alt=""
@@ -352,6 +388,7 @@ export default function Menu() {
                   </AnimatePresence>
                 </div>
               </motion.div>
+              </Fragment>
             )
           })}
         </div>

@@ -23,7 +23,7 @@ export function CategoryLuxuryTriangleFlag({ className = 'left-[3px] sm:left-1' 
   return (
     <div
       aria-hidden
-      className={`pointer-events-none absolute top-1/2 z-[8] h-[min(72%,2.85rem)] w-[clamp(11px,3vw,15px)] -translate-y-1/2 sm:h-[min(72%,3.35rem)] sm:w-4 ${className}`}
+      className={`pointer-events-none absolute top-1/2 z-[8] h-[min(68%,3.5rem)] w-[clamp(12px,3.2vw,17px)] -translate-y-1/2 sm:h-[min(68%,4rem)] sm:w-[18px] md:h-[min(68%,4.25rem)] md:w-5 ${className}`}
       style={{
         clipPath: 'polygon(0 8%, 0 92%, 100% 50%)',
         background:
