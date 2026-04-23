@@ -10,6 +10,7 @@ import {
   matchAutoPrefixGroup,
   deriveSectionTitle,
 } from '../data/menuAutoPrefixGroups'
+import { sanitizeMenuPanelsForSaladDescriptions } from '../utils/sanitizeSaladDescriptions'
 
 const CATEGORIES_COLLECTION =
   import.meta.env.VITE_FIREBASE_CATEGORIES_COLLECTION || 'categories'
@@ -45,6 +46,10 @@ function shouldHideMenuPanel(panel) {
 function filterPublicMenuPanels(panels) {
   if (!Array.isArray(panels)) return []
   return panels.filter((p) => !shouldHideMenuPanel(p))
+}
+
+function finalizeMenuPanels(panels) {
+  return sanitizeMenuPanelsForSaladDescriptions(filterPublicMenuPanels(panels))
 }
 
 /** Ürün / kategori eşlemesi: category_id ile categories belgesi (id veya doc id) */
@@ -503,7 +508,7 @@ export async function fetchMenuPanelsFromFirestore() {
       )
     }
     return {
-      panels: filterPublicMenuPanels(localMenuPanels),
+      panels: finalizeMenuPanels(localMenuPanels),
       usedFallback: true,
       error: null,
     }
@@ -529,7 +534,7 @@ export async function fetchMenuPanelsFromFirestore() {
         )
       }
       return {
-        panels: filterPublicMenuPanels(localMenuPanels),
+        panels: finalizeMenuPanels(localMenuPanels),
         usedFallback: true,
         error: null,
       }
@@ -539,14 +544,14 @@ export async function fetchMenuPanelsFromFirestore() {
       console.info(`[menu] Firestore (${source}): ${list.length} panel yüklendi.`)
     }
     return {
-      panels: sortPanels(filterPublicMenuPanels(list)),
+      panels: sortPanels(finalizeMenuPanels(list)),
       usedFallback: false,
       error: null,
     }
   } catch (e) {
     console.error('[menu] Firestore menü okuma hatası:', e)
     return {
-      panels: filterPublicMenuPanels(localMenuPanels),
+      panels: finalizeMenuPanels(localMenuPanels),
       usedFallback: true,
       error: e?.message || String(e),
     }

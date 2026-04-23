@@ -41,38 +41,16 @@ function pickCoverProductImageFromPanel(panel) {
 }
 
 /**
- * Kategori paneli arka planı: panel içi ürün fotoğrafı (ilk ürün hariç, mümkünse),
- * yoksa `coverImage`, sonra Unsplash.
+ * Kategori paneli arka planı: önce panel içi ürün fotoğrafı (ilk ürün hariç, mümkünse),
+ * yoksa panel `coverImage`. Harici stok görsel kullanılmaz.
  */
-export const defaultPanelCover =
-  'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1920&q=80'
+export const defaultPanelCover = null
 
-export const menuPanelCoverById = {
-  'selcuklu-mevlevi':
-    'https://images.unsplash.com/photo-1546549032-9571cd6ac27f?w=1920&q=80',
-  osmanli:
-    'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=1920&q=80',
-  konya:
-    'https://images.unsplash.com/photo-1558030006-450675393462?w=1920&q=80',
-  vejetaryen:
-    'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=1920&q=80',
-  vegan:
-    'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=1920&q=80',
-  kahvalti:
-    'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=1920&q=80',
-  'soguk-icecekler':
-    'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=1920&q=80',
-  'salata-tatli':
-    'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=1920&q=80',
-  'sicak-icecekler':
-    'https://images.unsplash.com/photo-1495474473417-c4e71bf2b93f?w=1920&q=80',
-  'cocuk-menu':
-    'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=1920&q=80',
-}
+export const menuPanelCoverById = {}
 
 export function getPanelCoverImage(panel) {
   const fromProduct = pickCoverProductImageFromPanel(panel)
   if (fromProduct) return fromProduct
   if (panel?.coverImage) return panel.coverImage
-  return menuPanelCoverById[panel.id] || defaultPanelCover
+  return null
 }

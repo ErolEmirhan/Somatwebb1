@@ -14,31 +14,11 @@ import {
 } from '../components/CategoryLuxuryLeftMark'
 
 export default function Home() {
-  const { fallbacks, panels } = useMenuProductImages()
+  const { panels } = useMenuProductImages()
   const heroUrls = HERO_SECTION_BACKGROUNDS
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  const menuCategoryCards = useMemo(() => {
-    const built = buildHomeMenuCategoryCards(panels)
-    const slotImages = built.map((b) => b.image)
-    const seen = new Set()
-    const filled = slotImages.map((url) => {
-      if (url) {
-        seen.add(url)
-        return url
-      }
-      return null
-    })
-    let fi = 0
-    for (let i = 0; i < filled.length; i++) {
-      if (filled[i]) continue
-      while (fi < fallbacks.length && seen.has(fallbacks[fi])) fi++
-      const u = fallbacks[fi++] ?? fallbacks[0]
-      filled[i] = u
-      seen.add(u)
-    }
-    return built.map((b, i) => ({ ...b, image: filled[i] }))
-  }, [panels, fallbacks])
+  const menuCategoryCards = useMemo(() => buildHomeMenuCategoryCards(panels), [panels])
 
   useEffect(() => {
     setCurrentImageIndex(0)
@@ -224,11 +204,19 @@ export default function Home() {
               >
                 <CategoryLuxuryLeftRail />
                 <div className="relative h-80 overflow-hidden sm:h-[22rem]">
-                  <img
-                    src={concept.image}
-                    alt={concept.title}
-                    className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
-                  />
+                  {concept.image ? (
+                    <img
+                      src={concept.image}
+                      alt={concept.title}
+                      decoding="async"
+                      className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
+                    />
+                  ) : (
+                    <div
+                      className="h-full w-full bg-gradient-to-br from-amber-800 via-amber-700 to-amber-950"
+                      aria-hidden
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                   <CategoryLuxuryTriangleFlag />
                   <h3 className="absolute bottom-4 left-6 z-10 text-2xl font-display font-bold text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]">

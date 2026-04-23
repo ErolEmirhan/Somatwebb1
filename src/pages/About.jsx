@@ -2,23 +2,14 @@ import { useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Heart, Award, Users, TrendingUp } from 'lucide-react'
 import { useMenuProductImages } from '../hooks/useMenuProductImages'
-import { padImageSources } from '../utils/collectMenuProductImages'
 
 export default function About() {
-  const { entries, fallbacks } = useMenuProductImages()
+  const { entries } = useMenuProductImages()
 
-  const storyImages = useMemo(() => {
+  const storySlots = useMemo(() => {
     const fromMenu = entries.slice(0, 4).map((e) => ({ src: e.src, alt: e.title }))
-    const urls = padImageSources(
-      fromMenu.map((x) => x.src),
-      4,
-      fallbacks
-    )
-    return urls.map((src) => {
-      const m = fromMenu.find((x) => x.src === src)
-      return m ?? { src, alt: 'Sultan Somatı' }
-    })
-  }, [entries, fallbacks])
+    return [0, 1, 2, 3].map((i) => fromMenu[i] ?? null)
+  }, [entries])
   const values = [
     { icon: Heart, title: 'Taze Malzeme', description: 'Günlük taze ürünlerle hazırlanan yemekler' },
     { icon: Award, title: 'Şef Deneyimi', description: 'Usta şeflerimizin özenle hazırladığı menü' },
@@ -72,26 +63,25 @@ export default function About() {
               className="relative"
             >
               <div className="grid grid-cols-2 gap-4">
-                <img
-                  src={storyImages[0]?.src}
-                  alt={storyImages[0]?.alt ?? ''}
-                  className="rounded-2xl shadow-xl w-full h-48 sm:h-56 object-cover"
-                />
-                <img
-                  src={storyImages[1]?.src}
-                  alt={storyImages[1]?.alt ?? ''}
-                  className="rounded-2xl shadow-xl mt-8 w-full h-48 sm:h-56 object-cover"
-                />
-                <img
-                  src={storyImages[2]?.src}
-                  alt={storyImages[2]?.alt ?? ''}
-                  className="rounded-2xl shadow-xl -mt-8 w-full h-48 sm:h-56 object-cover"
-                />
-                <img
-                  src={storyImages[3]?.src}
-                  alt={storyImages[3]?.alt ?? ''}
-                  className="rounded-2xl shadow-xl w-full h-48 sm:h-56 object-cover"
-                />
+                {storySlots.map((slot, idx) => {
+                  const wrap =
+                    idx === 1 ? 'mt-8' : idx === 2 ? '-mt-8' : ''
+                  return slot ? (
+                    <img
+                      key={idx}
+                      src={slot.src}
+                      alt={slot.alt}
+                      decoding="async"
+                      className={`rounded-2xl shadow-xl w-full h-48 sm:h-56 object-cover ${wrap}`}
+                    />
+                  ) : (
+                    <div
+                      key={idx}
+                      className={`rounded-2xl shadow-inner w-full h-48 sm:h-56 bg-gradient-to-br from-amber-100 to-amber-200/80 ${wrap}`}
+                      aria-hidden
+                    />
+                  )
+                })}
               </div>
             </motion.div>
           </div>

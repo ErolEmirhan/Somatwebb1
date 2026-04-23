@@ -4,26 +4,20 @@ import { X } from 'lucide-react'
 import { useMenuProductImages } from '../hooks/useMenuProductImages'
 
 export default function Gallery() {
-  const { entries, galleryCategories, fallbacks } = useMenuProductImages()
+  const { entries, galleryCategories } = useMenuProductImages()
   const [selectedImage, setSelectedImage] = useState(null)
   const [activeCategory, setActiveCategory] = useState('all')
 
-  const images = useMemo(() => {
-    if (entries.length > 0) {
-      return entries.map((e, i) => ({
+  const images = useMemo(
+    () =>
+      entries.map((e, i) => ({
         id: `menu-${i}`,
         src: e.src,
         category: e.panelId || 'all',
         title: e.title,
-      }))
-    }
-    return fallbacks.map((src, i) => ({
-      id: `fb-${i}`,
-      src,
-      category: 'all',
-      title: `Sultan Somatı — ${i + 1}`,
-    }))
-  }, [entries, fallbacks])
+      })),
+    [entries]
+  )
 
   const categories = useMemo(() => {
     if (entries.length === 0) return [{ id: 'all', name: 'Tümü' }]
@@ -65,6 +59,17 @@ export default function Gallery() {
 
           <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <AnimatePresence>
+              {filteredImages.length === 0 && (
+                <motion.p
+                  key="gallery-empty"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="col-span-full text-center text-gray-600 py-16 text-lg"
+                >
+                  Galeride gösterilecek ürün görseli yok. Görselleri menü ürünlerinize eklediğinizde burada
+                  tam çözünürlükte görünecektir.
+                </motion.p>
+              )}
               {filteredImages.map((image, index) => (
                 <motion.div
                   key={image.id}
@@ -77,11 +82,12 @@ export default function Gallery() {
                   className="relative group cursor-pointer overflow-hidden rounded-2xl shadow-lg"
                   onClick={() => setSelectedImage(image)}
                 >
-                  <div className="aspect-square">
+                  <div className="aspect-square bg-gray-100">
                     <img
                       src={image.src}
                       alt={image.title}
-                      className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                      decoding="async"
+                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500"
                     />
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -112,13 +118,19 @@ export default function Gallery() {
               <X className="w-8 h-8" />
             </button>
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.96, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              className="max-w-5xl w-full"
+              exit={{ scale: 0.96, opacity: 0 }}
+              className="flex max-h-[min(92vh,calc(100vw-2rem))] max-w-[min(96vw,100%)] w-full flex-col items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-              <img src={selectedImage.src} alt={selectedImage.title} className="w-full h-auto rounded-lg shadow-2xl" />
+              <img
+                src={selectedImage.src}
+                alt={selectedImage.title}
+                decoding="async"
+                fetchPriority="high"
+                className="max-h-[min(92vh,calc(100vw-4rem))] w-auto max-w-full object-contain rounded-lg shadow-2xl"
+              />
               <div className="text-center mt-6">
                 <h3 className="text-white text-2xl font-bold">{selectedImage.title}</h3>
               </div>

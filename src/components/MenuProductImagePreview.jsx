@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { X } from 'lucide-react'
 import { resolveMenuImageSrc } from '../utils/resolveMenuImageSrc'
+import { formatMenuProductDescription } from '../utils/sanitizeSaladDescriptions'
 
 export default function MenuProductImagePreview({
   open,
@@ -9,8 +10,13 @@ export default function MenuProductImagePreview({
   product,
   panelTitle,
   sectionTitle,
+  panelId,
+  sectionIndex = 0,
 }) {
   const src = product ? resolveMenuImageSrc(product.image) : null
+  const descriptionText = product
+    ? formatMenuProductDescription(product.description, sectionTitle, panelId, sectionIndex)
+    : null
 
   useEffect(() => {
     if (!open) return
@@ -91,9 +97,9 @@ export default function MenuProductImagePreview({
                 {product.note && (
                   <p className="text-sm text-gray-500 mt-2">({product.note})</p>
                 )}
-                {product.description && (
-                  <p className="text-sm text-gray-600 mt-3 leading-relaxed">{product.description}</p>
-                )}
+                {descriptionText ? (
+                  <p className="text-sm text-gray-600 mt-3 leading-relaxed">{descriptionText}</p>
+                ) : null}
                 <p className="mt-5 text-2xl sm:text-3xl font-bold text-amber-600 tabular-nums">
                   ₺{product.price}
                 </p>

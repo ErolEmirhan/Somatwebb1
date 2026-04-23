@@ -240,11 +240,11 @@ export const menuPanels = [
       {
         title: 'Salatalar',
         items: [
-          { name: 'Gül Yapraklı Marul Salatası', price: '340', description: 'Akdeniz Marulu, Kıvırcık Marul, Dereotu, Gül Yaprağı, Zeytinyağı Limon Sosu, Nar Ekşisi', glutenFree: true },
-          { name: 'Çoban Salatası', price: '340', description: 'Kuru Soğan, Domates, Salatalık, Biber, Zeytinyağı, Limon Sosu, Nar Ekşisi', glutenFree: true },
-          { name: 'Taze Meyveli Mevsim Salatası', price: '390', description: 'Mevsim Meyveleri, Kıvırcık Marul, Zeytinyağı, Limon Sosu, Nar Ekşisi', glutenFree: true },
-          { name: 'Kuru Meyveli Cevizli Salata', price: '390', description: 'Akdeniz Marulu, Kıvırcık Marul, Kuru İncir, Kuru Üzüm, Kayısı Kurusu, Ceviz, Zeytinyağı, Limon Sosu, Nar Ekşisi', glutenFree: true },
-          { name: '3 Peynirli Yeşillik Salatası', price: '390', description: 'Akdeniz Marulu, Kıvırcık Marul, Beyaz Peynir, Tulum Peyniri, Süzme Peynir, Zeytinyağı, Limon Sosu, Nar Ekşisi', glutenFree: true },
+          { name: 'Gül Yapraklı Marul Salatası', price: '340', description: 'Akdeniz Marulu, Kıvırcık Marul, Dereotu, Gül Yaprağı, Zeytinyağı, Nar Ekşisi', glutenFree: true },
+          { name: 'Çoban Salatası', price: '340', description: 'Kuru Soğan, Domates, Salatalık, Biber, Zeytinyağı, Nar Ekşisi', glutenFree: true },
+          { name: 'Taze Meyveli Mevsim Salatası', price: '390', description: 'Mevsim Meyveleri, Kıvırcık Marul, Zeytinyağı, Nar Ekşisi', glutenFree: true },
+          { name: 'Kuru Meyveli Cevizli Salata', price: '390', description: 'Akdeniz Marulu, Kıvırcık Marul, Kuru İncir, Kuru Üzüm, Kayısı Kurusu, Ceviz, Zeytinyağı, Nar Ekşisi', glutenFree: true },
+          { name: '3 Peynirli Yeşillik Salatası', price: '390', description: 'Akdeniz Marulu, Kıvırcık Marul, Beyaz Peynir, Tulum Peyniri, Süzme Peynir, Zeytinyağı, Nar Ekşisi', glutenFree: true },
           { name: 'Yoğurt', price: '290', glutenFree: true },
           { name: 'Cacık', price: '290', glutenFree: true },
           { name: 'Karışık Turşu', price: '290', glutenFree: true },

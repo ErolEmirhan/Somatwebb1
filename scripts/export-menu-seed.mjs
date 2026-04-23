@@ -7,7 +7,6 @@ import { writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
 import { menuPanels } from '../src/data/menuData.js'
-import { menuPanelCoverById, defaultPanelCover } from '../src/data/menuPanelCovers.js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..')
@@ -16,7 +15,7 @@ const panels = menuPanels.map((p, order) => ({
   id: p.id,
   title: p.title,
   order,
-  coverImage: p.coverImage ?? menuPanelCoverById[p.id] ?? defaultPanelCover,
+  coverImage: p.coverImage ?? null,
   sections: p.sections,
 }))
 

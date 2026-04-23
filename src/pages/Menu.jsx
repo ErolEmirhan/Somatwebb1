@@ -11,6 +11,7 @@ import {
 } from '../components/CategoryLuxuryLeftMark'
 import { fetchMenuPanelsFromFirestore } from '../services/menuFromFirestore'
 import { BRAND } from '../config/brand'
+import { formatMenuProductDescription } from '../utils/sanitizeSaladDescriptions'
 
 /** Kategori kartları arası ince altın motif + nefes payı */
 function MenuCategoryMotifDivider() {
@@ -216,6 +217,8 @@ export default function Menu() {
         product={imagePreview?.product}
         panelTitle={imagePreview?.panelTitle}
         sectionTitle={imagePreview?.sectionTitle}
+        panelId={imagePreview?.panelId}
+        sectionIndex={imagePreview?.sectionIndex}
       />
 
       {/* Panel list — eşit yükseklik, fotoğraf + alttan ~%68 siyah gradient, ortalanmış başlık */}
@@ -250,12 +253,19 @@ export default function Menu() {
                   <CategoryLuxuryLeftRail />
                   {/* Kapak şeridi: tüm kategorilerde aynı yükseklik; gradient yalnızca bu bölümde */}
                   <div className="relative h-44 w-full overflow-hidden bg-neutral-900 sm:h-52 md:h-60">
-                    <img
-                      src={coverUrl}
-                      alt=""
-                      aria-hidden
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.1s] ease-out group-hover:scale-[1.03]"
-                    />
+                    {coverUrl ? (
+                      <img
+                        src={coverUrl}
+                        alt=""
+                        aria-hidden
+                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-[1.1s] ease-out group-hover:scale-[1.03]"
+                      />
+                    ) : (
+                      <div
+                        className="absolute inset-0 bg-gradient-to-br from-amber-950 via-neutral-900 to-neutral-950"
+                        aria-hidden
+                      />
+                    )}
                     <div
                       className="pointer-events-none absolute inset-x-0 bottom-0 h-[68%]"
                       style={{
@@ -337,47 +347,55 @@ export default function Menu() {
                               )}
 
                               <ul className="space-y-1">
-                                {section.items.map((product, index) => (
-                                  <motion.li
-                                    key={`${product.name}-${index}`}
-                                    initial={{ opacity: 0, x: -8 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: index * 0.015, duration: 0.2 }}
-                                    className="flex flex-row items-start gap-3 sm:gap-4 py-4 px-3 sm:px-4 rounded-xl border border-transparent transition-all duration-200 hover:border-neutral-200/80 hover:bg-neutral-50/90"
-                                  >
-                                    <MenuProductThumbnail
-                                      product={product}
-                                      onOpenPreview={() =>
-                                        setImagePreview({
-                                          product,
-                                          panelTitle: panel.title,
-                                          sectionTitle: section.title,
-                                        })
-                                      }
-                                    />
-                                    <div className="min-w-0 flex-1 pt-0.5">
-                                      <div className="flex flex-wrap items-center gap-2">
-                                        <span className="font-semibold text-gray-900">{product.name}</span>
-                                        {product.glutenFree && (
-                                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200">
-                                            GLUTEN İÇERMEZ
-                                          </span>
-                                        )}
-                                        {product.note && (
-                                          <span className="text-xs text-gray-500">({product.note})</span>
-                                        )}
+                                {section.items.map((product, index) => {
+                                  const desc = formatMenuProductDescription(
+                                    product.description,
+                                    section.title,
+                                    panel.id,
+                                    sectionIndex
+                                  )
+                                  return (
+                                    <motion.li
+                                      key={`${product.name}-${index}`}
+                                      initial={{ opacity: 0, x: -8 }}
+                                      animate={{ opacity: 1, x: 0 }}
+                                      transition={{ delay: index * 0.015, duration: 0.2 }}
+                                      className="flex flex-row items-start gap-3 sm:gap-4 py-4 px-3 sm:px-4 rounded-xl border border-transparent transition-all duration-200 hover:border-neutral-200/80 hover:bg-neutral-50/90"
+                                    >
+                                      <MenuProductThumbnail
+                                        product={product}
+                                        onOpenPreview={() =>
+                                          setImagePreview({
+                                            product,
+                                            panelTitle: panel.title,
+                                            sectionTitle: section.title,
+                                            panelId: panel.id,
+                                            sectionIndex,
+                                          })
+                                        }
+                                      />
+                                      <div className="min-w-0 flex-1 pt-0.5">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                          <span className="font-semibold text-gray-900">{product.name}</span>
+                                          {product.glutenFree && (
+                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-emerald-100 text-emerald-700 border border-emerald-200">
+                                              GLUTEN İÇERMEZ
+                                            </span>
+                                          )}
+                                          {product.note && (
+                                            <span className="text-xs text-gray-500">({product.note})</span>
+                                          )}
+                                        </div>
+                                        {desc ? (
+                                          <p className="text-sm text-gray-600 mt-1 leading-relaxed">{desc}</p>
+                                        ) : null}
                                       </div>
-                                      {product.description && (
-                                        <p className="text-sm text-gray-600 mt-1 leading-relaxed">
-                                          {product.description}
-                                        </p>
-                                      )}
-                                    </div>
-                                    <span className="text-neutral-900 font-semibold whitespace-nowrap flex-shrink-0 text-lg tabular-nums pt-0.5">
-                                      ₺{product.price}
-                                    </span>
-                                  </motion.li>
-                                ))}
+                                      <span className="text-neutral-900 font-semibold whitespace-nowrap flex-shrink-0 text-lg tabular-nums pt-0.5">
+                                        ₺{product.price}
+                                      </span>
+                                    </motion.li>
+                                  )
+                                })}
                               </ul>
                             </div>
                           ))}
