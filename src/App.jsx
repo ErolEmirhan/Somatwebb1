@@ -1,4 +1,4 @@
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -44,7 +44,8 @@ function AppContent() {
         <main className="flex-grow">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
-              <Route path="/" element={<Home />} />
+              <Route path="/" element={<Navigate to="/menu" replace />} />
+              <Route path="/anasayfa" element={<Home />} />
               <Route path="/hakkimizda" element={<About />} />
               <Route path="/galeri" element={<Gallery />} />
               <Route path="/menu" element={<Menu />} />

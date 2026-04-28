@@ -17,7 +17,7 @@ export default function Navbar() {
   }, [])
 
   const navLinks = [
-    { name: 'Anasayfa', path: '/', icon: Home },
+    { name: 'Anasayfa', path: '/anasayfa', icon: Home },
     { name: 'Menü', path: '/menu', icon: UtensilsCrossed },
     { name: 'Hakkımızda', path: '/hakkimizda', icon: Info },
     { name: 'Galeri', path: '/galeri', icon: Images },
@@ -36,7 +36,7 @@ export default function Navbar() {
     >
       <div className="container-custom">
         <div className="flex items-center justify-between relative">
-          <Link to="/" className="flex items-center gap-3 group min-w-0" aria-label={`${BRAND.name} anasayfa`}>
+          <Link to="/anasayfa" className="flex items-center gap-3 group min-w-0" aria-label={`${BRAND.name} anasayfa`}>
             <motion.div className="flex-shrink-0" whileHover={{ scale: 1.04 }}>
               <BrandLogo variant="nav" alt="" />
             </motion.div>

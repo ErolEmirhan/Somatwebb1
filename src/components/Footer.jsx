@@ -13,7 +13,7 @@ import BrandLogo from './BrandLogo'
 
 export default function Footer() {
   const quickLinks = [
-    { name: 'Anasayfa', path: '/' },
+    { name: 'Anasayfa', path: '/anasayfa' },
     { name: 'Hakkımızda', path: '/hakkimizda' },
     { name: 'Galeri', path: '/galeri' },
     { name: 'Menü', path: '/menu' },
