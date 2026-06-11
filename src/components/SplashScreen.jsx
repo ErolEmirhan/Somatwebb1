@@ -1,16 +1,10 @@
 import { motion } from 'framer-motion'
-import { useEffect } from 'react'
 import { BRAND } from '../config/brand'
 import BrandLogo from './BrandLogo'
 
 const SPLASH_LINES = ['Selçuklu & Mevlevi', 'Osmanlı & Konya', 'Tarihi mutfak']
 
-export default function SplashScreen({ onFinish }) {
-  useEffect(() => {
-    const timer = setTimeout(onFinish, 2500)
-    return () => clearTimeout(timer)
-  }, [onFinish])
-
+export default function SplashScreen() {
   return (
     <motion.div
       className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center px-6"

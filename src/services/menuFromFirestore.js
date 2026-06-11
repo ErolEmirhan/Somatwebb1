@@ -10,6 +10,7 @@ import {
   matchAutoPrefixGroup,
   deriveSectionTitle,
 } from '../data/menuAutoPrefixGroups'
+import { getPanelCoverImage } from '../data/menuPanelCovers'
 import { sanitizeMenuPanelsForSaladDescriptions } from '../utils/sanitizeSaladDescriptions'
 
 const CATEGORIES_COLLECTION =
@@ -24,6 +25,7 @@ const PANELS_COLLECTION =
 const MENU_ROOT_DOC = import.meta.env.VITE_FIREBASE_MENU_ROOT_DOC?.trim() || ''
 
 const MENU_SESSION_CACHE_KEY = 'somat-menu-panels-v1'
+const MENU_COVER_CACHE_KEY = 'somat-menu-covers-v1'
 const MENU_SESSION_CACHE_TTL_MS = 30 * 60 * 1000
 
 /** @type {{ panels: object[], usedFallback: boolean, error: string | null } | null} */
@@ -534,6 +536,54 @@ function readSessionMenuCache() {
   }
 }
 
+function readSessionCoverCache() {
+  if (typeof sessionStorage === 'undefined') return null
+  try {
+    const raw = sessionStorage.getItem(MENU_COVER_CACHE_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    if (!parsed?.covers || typeof parsed.covers !== 'object') return null
+    if (Date.now() - (parsed.ts || 0) > MENU_SESSION_CACHE_TTL_MS) return null
+    return parsed.covers
+  } catch {
+    return null
+  }
+}
+
+function writeSessionCoverCache(panels) {
+  if (typeof sessionStorage === 'undefined' || !Array.isArray(panels) || panels.length === 0) {
+    return
+  }
+  try {
+    /** @type {Record<string, string>} */
+    const covers = {}
+    for (const panel of panels) {
+      const url = getPanelCoverImage(panel)
+      if (url && panel?.id) covers[panel.id] = url
+    }
+    if (Object.keys(covers).length === 0) return
+    sessionStorage.setItem(
+      MENU_COVER_CACHE_KEY,
+      JSON.stringify({
+        covers,
+        ts: Date.now(),
+      })
+    )
+  } catch {
+    /* depolama kotası */
+  }
+}
+
+function mergeSessionCovers(panels) {
+  const covers = readSessionCoverCache()
+  if (!covers) return panels
+  return panels.map((panel) => {
+    const cached = covers[panel.id]
+    if (!cached || panel.coverImage) return panel
+    return { ...panel, coverImage: cached }
+  })
+}
+
 function writeSessionMenuCache(panels) {
   if (typeof sessionStorage === 'undefined' || !Array.isArray(panels) || panels.length === 0) {
     return
@@ -546,6 +596,7 @@ function writeSessionMenuCache(panels) {
         ts: Date.now(),
       })
     )
+    writeSessionCoverCache(panels)
   } catch {
     /* depolama kotası veya gizli mod */
   }
@@ -559,15 +610,19 @@ function cacheMenuResult(result) {
   return result
 }
 
-/** Anında gösterim: bellek → oturum önbelleği → yerel menuData */
+/** Anında gösterim: bellek → oturum önbelleği (+ kapak görselleri) → yerel menuData */
 export function getInitialMenuPanels() {
   if (memoryCache?.panels?.length) return memoryCache.panels
   const sessionPanels = readSessionMenuCache()
-  if (sessionPanels?.length) return sessionPanels
+  if (sessionPanels?.length) return mergeSessionCovers(sessionPanels)
   return finalizeMenuPanels(localMenuPanels)
 }
 
-/** Uygulama açılışında çağrılabilir; menü sayfasına gelmeden veriyi hazırlar */
+export function isMenuPanelsCached() {
+  return Boolean(memoryCache?.panels?.length)
+}
+
+/** @deprecated bootstrapMenuExperience kullanın */
 export function prefetchMenuPanels() {
   return fetchMenuPanelsFromFirestore()
 }

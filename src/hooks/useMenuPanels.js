@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import {
   fetchMenuPanelsFromFirestore,
   getInitialMenuPanels,
+  isMenuPanelsCached,
 } from '../services/menuFromFirestore'
 
 /**
@@ -10,7 +11,7 @@ import {
 export function useMenuPanels() {
   const [panels, setPanels] = useState(getInitialMenuPanels)
   const [menuLoadError, setMenuLoadError] = useState(null)
-  const [isRefreshing, setIsRefreshing] = useState(true)
+  const [isRefreshing, setIsRefreshing] = useState(() => !isMenuPanelsCached())
 
   useEffect(() => {
     let cancelled = false

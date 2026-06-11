@@ -5,10 +5,10 @@ import { HelmetProvider } from 'react-helmet-async'
 import App from './App.jsx'
 import './index.css'
 import { initFirebaseAnalytics } from './config/firebase'
-import { prefetchMenuPanels } from './services/menuFromFirestore'
+import { bootstrapMenuExperience } from './services/menuBootstrap'
 
 void initFirebaseAnalytics()
-void prefetchMenuPanels()
+void bootstrapMenuExperience()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

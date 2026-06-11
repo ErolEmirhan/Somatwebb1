@@ -16,6 +16,11 @@ import InstagramFloatingButton from './components/InstagramFloatingButton'
 import ReservationFloatingButton from './components/ReservationFloatingButton'
 import LocationFloatingButton from './components/LocationFloatingButton'
 import SplashScreen from './components/SplashScreen'
+import { bootstrapMenuExperience } from './services/menuBootstrap'
+
+const SPLASH_MIN_MS = 2500
+const SPLASH_EXIT_MS = 500
+const SPLASH_BOOTSTRAP_TIMEOUT_MS = 12000
 
 function AppContent() {
   const [buttonsCollapsed, setButtonsCollapsed] = useState(true)
@@ -93,14 +98,31 @@ function AppContent() {
 function App() {
   const [showSplash, setShowSplash] = useState(true)
 
-  const handleSplashFinish = () => {
-    setTimeout(() => setShowSplash(false), 500)
-  }
+  useEffect(() => {
+    let cancelled = false
+
+    const minDelay = new Promise((resolve) => setTimeout(resolve, SPLASH_MIN_MS))
+    const bootstrap = Promise.race([
+      bootstrapMenuExperience().catch(() => undefined),
+      new Promise((resolve) => setTimeout(resolve, SPLASH_BOOTSTRAP_TIMEOUT_MS)),
+    ])
+
+    Promise.all([minDelay, bootstrap]).then(() => {
+      if (cancelled) return
+      setTimeout(() => {
+        if (!cancelled) setShowSplash(false)
+      }, SPLASH_EXIT_MS)
+    })
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   return (
     <>
       <AnimatePresence mode="wait">
-        {showSplash && <SplashScreen key="splash" onFinish={handleSplashFinish} />}
+        {showSplash && <SplashScreen key="splash" />}
       </AnimatePresence>
       {!showSplash && <AppContent />}
     </>
