@@ -15,7 +15,12 @@ export function useMenuPanels() {
 
   useEffect(() => {
     let cancelled = false
-    setIsRefreshing(true)
+
+    if (isMenuPanelsCached()) {
+      const cached = getInitialMenuPanels()
+      if (cached?.length) setPanels(cached)
+      setIsRefreshing(false)
+    }
 
     fetchMenuPanelsFromFirestore().then((r) => {
       if (cancelled) return

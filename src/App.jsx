@@ -20,7 +20,6 @@ import { bootstrapMenuExperience } from './services/menuBootstrap'
 
 const SPLASH_MIN_MS = 2500
 const SPLASH_EXIT_MS = 500
-const SPLASH_BOOTSTRAP_TIMEOUT_MS = 12000
 
 function AppContent() {
   const [buttonsCollapsed, setButtonsCollapsed] = useState(true)
@@ -99,24 +98,13 @@ function App() {
   const [showSplash, setShowSplash] = useState(true)
 
   useEffect(() => {
-    let cancelled = false
+    void bootstrapMenuExperience()
 
-    const minDelay = new Promise((resolve) => setTimeout(resolve, SPLASH_MIN_MS))
-    const bootstrap = Promise.race([
-      bootstrapMenuExperience().catch(() => undefined),
-      new Promise((resolve) => setTimeout(resolve, SPLASH_BOOTSTRAP_TIMEOUT_MS)),
-    ])
+    const showTimer = setTimeout(() => {
+      setTimeout(() => setShowSplash(false), SPLASH_EXIT_MS)
+    }, SPLASH_MIN_MS)
 
-    Promise.all([minDelay, bootstrap]).then(() => {
-      if (cancelled) return
-      setTimeout(() => {
-        if (!cancelled) setShowSplash(false)
-      }, SPLASH_EXIT_MS)
-    })
-
-    return () => {
-      cancelled = true
-    }
+    return () => clearTimeout(showTimer)
   }, [])
 
   return (
