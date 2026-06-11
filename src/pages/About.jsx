@@ -19,7 +19,7 @@ export default function About() {
 
   const timeline = [
     { year: '2018', title: 'Kuruluş', description: 'Kaliteli yemek ve sıcak atmosfer hayaliyle yola çıktık.' },
-    { year: '2020', title: 'Menü Genişlemesi', description: 'Ana yemekler, ızgaralar ve tatlı kategorilerimizi zenginleştirdik.' },
+    { year: '2020', title: 'Menü Genişlemesi', description: 'Tarihi mutfaklardan ana yemek ve tatlı seçkilerimizi zenginleştirdik.' },
     { year: '2023', title: 'Mekan Yenileme', description: 'Daha ferah ve modern bir ortamla hizmete devam ettik.' },
     { year: '2025', title: 'Bugün', description: 'Binlerce mutlu misafir ve unutulmaz sofralar sunmaya devam ediyoruz.' },
   ]
@@ -47,7 +47,7 @@ export default function About() {
                   Sultan Somatı olarak, tarihi Türk mutfağı geleneğini yaşatan lezzetler ve özenli sunumla misafirlerimize unutulmaz bir deneyim sunmak için yola çıktık. Selçuklu, Mevlevi, Osmanlı ve Konya mutfaklarından seçkiler soframızda buluşuyor.
                 </p>
                 <p>
-                  Taze ve doğal ürünlerle hazırlanan ana yemeklerimiz, ızgaralarımız ve ev yapımı tatlılarımız, şef ekibimizin titiz çalışmasıyla sofralarınıza ulaşıyor. Her tabak, lezzet ve sunum bütünlüğüyle tasarlanıyor.
+                  Taze ve doğal ürünlerle hazırlanan çorbalarımız, ana yemeklerimiz ve ev yapımı tatlılarımız, şef ekibimizin titiz çalışmasıyla sofralarınıza ulaşıyor. Her tabak, lezzet ve sunum bütünlüğüyle tasarlanıyor.
                 </p>
                 <p>
                   Misafir memnuniyeti odaklı hizmet anlayışımız ve sıcak atmosferimizle, hem aile yemekleri hem de özel günleriniz için ideal bir adres olmaktan gurur duyuyoruz.

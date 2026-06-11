@@ -1,5 +1,10 @@
 import { initializeApp, getApps } from 'firebase/app'
-import { getFirestore } from 'firebase/firestore'
+import {
+  getFirestore,
+  initializeFirestore,
+  persistentLocalCache,
+  persistentMultipleTabManager,
+} from 'firebase/firestore'
 import { getAnalytics, isSupported } from 'firebase/analytics'
 
 /**
@@ -42,7 +47,19 @@ function getFirebaseApp() {
 
 const app = getFirebaseApp()
 
-export const db = app ? getFirestore(app) : null
+function createFirestore(appInstance) {
+  try {
+    return initializeFirestore(appInstance, {
+      localCache: persistentLocalCache({
+        tabManager: persistentMultipleTabManager(),
+      }),
+    })
+  } catch {
+    return getFirestore(appInstance)
+  }
+}
+
+export const db = app ? createFirestore(app) : null
 
 export { app }
 

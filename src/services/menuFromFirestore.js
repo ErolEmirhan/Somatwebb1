@@ -23,6 +23,14 @@ const PANELS_COLLECTION =
 /** Tek belge: örn. `config/menu` — alan: `panels` (dizi) */
 const MENU_ROOT_DOC = import.meta.env.VITE_FIREBASE_MENU_ROOT_DOC?.trim() || ''
 
+const MENU_SESSION_CACHE_KEY = 'somat-menu-panels-v1'
+const MENU_SESSION_CACHE_TTL_MS = 30 * 60 * 1000
+
+/** @type {{ panels: object[], usedFallback: boolean, error: string | null } | null} */
+let memoryCache = null
+/** @type {Promise<{ panels: object[], usedFallback: boolean, error: string | null }> | null} */
+let inflightFetch = null
+
 function str(v) {
   if (v == null) return ''
   return String(v).trim()
@@ -497,21 +505,85 @@ function sortPanels(panels) {
   })
 }
 
-/**
- * Öncelik: `categories` + `products` → sonra `MENU_ROOT_DOC` → `menu_panels` → yerel menuData.
- */
-export async function fetchMenuPanelsFromFirestore() {
+function stripHeavyImageFields(panels) {
+  if (!Array.isArray(panels)) return []
+  return panels.map((panel) => ({
+    ...panel,
+    coverImage:
+      typeof panel.coverImage === 'string' && /^https?:\/\//i.test(panel.coverImage)
+        ? panel.coverImage
+        : undefined,
+    sections: (panel.sections || []).map((section) => ({
+      ...section,
+      items: (section.items || []).map(({ image, ...item }) => item),
+    })),
+  }))
+}
+
+function readSessionMenuCache() {
+  if (typeof sessionStorage === 'undefined') return null
+  try {
+    const raw = sessionStorage.getItem(MENU_SESSION_CACHE_KEY)
+    if (!raw) return null
+    const parsed = JSON.parse(raw)
+    if (!Array.isArray(parsed?.panels) || parsed.panels.length === 0) return null
+    if (Date.now() - (parsed.ts || 0) > MENU_SESSION_CACHE_TTL_MS) return null
+    return finalizeMenuPanels(parsed.panels)
+  } catch {
+    return null
+  }
+}
+
+function writeSessionMenuCache(panels) {
+  if (typeof sessionStorage === 'undefined' || !Array.isArray(panels) || panels.length === 0) {
+    return
+  }
+  try {
+    sessionStorage.setItem(
+      MENU_SESSION_CACHE_KEY,
+      JSON.stringify({
+        panels: stripHeavyImageFields(panels),
+        ts: Date.now(),
+      })
+    )
+  } catch {
+    /* depolama kotası veya gizli mod */
+  }
+}
+
+function cacheMenuResult(result) {
+  memoryCache = result
+  if (!result.usedFallback && result.panels?.length) {
+    writeSessionMenuCache(result.panels)
+  }
+  return result
+}
+
+/** Anında gösterim: bellek → oturum önbelleği → yerel menuData */
+export function getInitialMenuPanels() {
+  if (memoryCache?.panels?.length) return memoryCache.panels
+  const sessionPanels = readSessionMenuCache()
+  if (sessionPanels?.length) return sessionPanels
+  return finalizeMenuPanels(localMenuPanels)
+}
+
+/** Uygulama açılışında çağrılabilir; menü sayfasına gelmeden veriyi hazırlar */
+export function prefetchMenuPanels() {
+  return fetchMenuPanelsFromFirestore()
+}
+
+async function fetchMenuPanelsFromFirestoreInternal() {
   if (!db) {
     if (import.meta.env.DEV) {
       console.info(
         '[menu] Firestore kapalı (.env içinde VITE_FIREBASE_*). Yerel menuData kullanılıyor.'
       )
     }
-    return {
+    return cacheMenuResult({
       panels: finalizeMenuPanels(localMenuPanels),
       usedFallback: true,
       error: null,
-    }
+    })
   }
 
   try {
@@ -533,27 +605,41 @@ export async function fetchMenuPanelsFromFirestore() {
           `[menu] Firestore'da menü verisi yok (${CATEGORIES_COLLECTION} / ${PRODUCTS_COLLECTION}). Yerel menuData kullanılıyor.`
         )
       }
-      return {
+      return cacheMenuResult({
         panels: finalizeMenuPanels(localMenuPanels),
         usedFallback: true,
         error: null,
-      }
+      })
     }
 
     if (import.meta.env.DEV) {
       console.info(`[menu] Firestore (${source}): ${list.length} panel yüklendi.`)
     }
-    return {
+    return cacheMenuResult({
       panels: sortPanels(finalizeMenuPanels(list)),
       usedFallback: false,
       error: null,
-    }
+    })
   } catch (e) {
     console.error('[menu] Firestore menü okuma hatası:', e)
-    return {
+    return cacheMenuResult({
       panels: finalizeMenuPanels(localMenuPanels),
       usedFallback: true,
       error: e?.message || String(e),
-    }
+    })
   }
+}
+
+/**
+ * Öncelik: `categories` + `products` → sonra `MENU_ROOT_DOC` → `menu_panels` → yerel menuData.
+ * Bellek ve oturum önbelleği ile tekrar çağrılar hızlandırılır.
+ */
+export async function fetchMenuPanelsFromFirestore({ force = false } = {}) {
+  if (!force && memoryCache) return memoryCache
+  if (inflightFetch) return inflightFetch
+
+  inflightFetch = fetchMenuPanelsFromFirestoreInternal().finally(() => {
+    inflightFetch = null
+  })
+  return inflightFetch
 }

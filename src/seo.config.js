@@ -11,14 +11,14 @@ export const DEFAULT_OG_IMAGE = `${SITE_URL}${BRAND_LOGO_PATH}`
 
 export const DEFAULT_META = {
   title: `${BRAND.name} | Tarihi Türk Mutfağı`,
-  description: `${BRAND.name} — ${BRAND.tagline} Menü, rezervasyon ve iletişim.`,
+  description: BRAND.metaDescription,
   canonical: `${SITE_URL}/menu`,
 }
 
 export const PAGE_SEO = {
   '/anasayfa': {
     title: `${BRAND.name} | Tarihi Türk Mutfağı`,
-    description: `${BRAND.name} — ${BRAND.tagline} Menü, rezervasyon ve iletişim.`,
+    description: BRAND.metaDescription,
     canonical: `${SITE_URL}/anasayfa`,
   },
   '/hakkimizda': {

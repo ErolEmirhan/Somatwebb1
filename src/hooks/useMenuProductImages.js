@@ -1,6 +1,5 @@
-import { useState, useEffect, useMemo } from 'react'
-import { menuPanels as localMenuPanels } from '../data/menuData'
-import { fetchMenuPanelsFromFirestore } from '../services/menuFromFirestore'
+import { useEffect, useMemo } from 'react'
+import { useMenuPanels } from './useMenuPanels'
 import {
   collectMenuProductImages,
   dedupeMenuProductImages,
@@ -14,21 +13,13 @@ export const MENU_VISUAL_FALLBACK_URLS = []
  * Uzaktan veri gelince liste güncellenir.
  */
 export function useMenuProductImages() {
-  const [panels, setPanels] = useState(localMenuPanels)
+  const { panels, menuLoadError } = useMenuPanels()
 
   useEffect(() => {
-    let cancelled = false
-    fetchMenuPanelsFromFirestore().then((r) => {
-      if (cancelled) return
-      if (import.meta.env.PROD && r.error) {
-        console.warn('[Sultan Somatı] Firestore menü okunamadı, yerel menü kullanılıyor:', r.error)
-      }
-      if (Array.isArray(r.panels) && r.panels.length > 0) setPanels(r.panels)
-    })
-    return () => {
-      cancelled = true
+    if (import.meta.env.PROD && menuLoadError) {
+      console.warn('[Sultan Somatı] Firestore menü okunamadı, yerel menü kullanılıyor:', menuLoadError)
     }
-  }, [])
+  }, [menuLoadError])
 
   const entries = useMemo(
     () => dedupeMenuProductImages(collectMenuProductImages(panels)),
