@@ -1,10 +1,16 @@
 import { motion } from 'framer-motion'
+import { useEffect } from 'react'
 import { BRAND } from '../config/brand'
 import BrandLogo from './BrandLogo'
 
 const SPLASH_LINES = ['Selçuklu & Mevlevi', 'Osmanlı & Konya', 'Tarihi mutfak']
 
-export default function SplashScreen() {
+export default function SplashScreen({ onFinish }) {
+  useEffect(() => {
+    const timer = setTimeout(onFinish, 2500)
+    return () => clearTimeout(timer)
+  }, [onFinish])
+
   return (
     <motion.div
       className="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center px-6"
@@ -21,7 +27,7 @@ export default function SplashScreen() {
         <BrandLogo variant="splash" />
       </motion.div>
 
-      <motion.h1
+      <motion.p
         className="text-3xl sm:text-4xl md:text-5xl font-display font-bold tracking-tight text-center gradient-gold-text"
         style={{ textShadow: '2px 2px 4px rgba(212, 175, 55, 0.15)' }}
         initial={{ opacity: 0, y: 24 }}
@@ -29,7 +35,7 @@ export default function SplashScreen() {
         transition={{ duration: 0.55, delay: 0.2 }}
       >
         {BRAND.name}
-      </motion.h1>
+      </motion.p>
 
       <motion.p
         className="mt-3 text-sm md:text-base text-amber-900/70 text-center max-w-md font-medium"

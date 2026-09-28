@@ -5,15 +5,13 @@ import { HelmetProvider } from 'react-helmet-async'
 import App from './App.jsx'
 import './index.css'
 import { initFirebaseAnalytics } from './config/firebase'
-import { bootstrapMenuExperience } from './services/menuBootstrap'
 
 void initFirebaseAnalytics()
-void bootstrapMenuExperience()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <HelmetProvider>
+      <HelmetProvider prioritizeSeoTags>
         <App />
       </HelmetProvider>
     </BrowserRouter>

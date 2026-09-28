@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "node scripts/generate-sitemap.mjs && vite build && node scripts/prerender-seo-html.mjs && node scripts/generate-sitemap.mjs",
     "preview": "vite preview",
-    "export-menu-seed": "node scripts/export-menu-seed.mjs"
+    "export-menu-seed": "node scripts/export-menu-seed.mjs",
+    "seo:audit": "node scripts/seo-audit.mjs",
+    "seo:audit:full": "node scripts/seo-full-audit.mjs"
   },
   "dependencies": {
     "firebase": "^12.11.0",

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState, useEffect } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
@@ -10,16 +10,21 @@ import Gallery from './pages/Gallery'
 import Menu from './pages/Menu'
 import Contact from './pages/Contact'
 import Order from './pages/Order'
+import KonyadaNeYenir from './pages/KonyadaNeYenir'
+import SeoContentPage from './pages/SeoContentPage'
+import { SEO_PAGES, getSeoPageBySlug } from './content/seoPages'
 import ScrollToTop from './components/ScrollToTop'
 import SEOHead from './components/SEOHead'
 import InstagramFloatingButton from './components/InstagramFloatingButton'
 import ReservationFloatingButton from './components/ReservationFloatingButton'
 import LocationFloatingButton from './components/LocationFloatingButton'
 import SplashScreen from './components/SplashScreen'
-import { bootstrapMenuExperience } from './services/menuBootstrap'
 
-const SPLASH_MIN_MS = 2500
-const SPLASH_EXIT_MS = 500
+function SeoPageRoute({ slug }) {
+  const page = getSeoPageBySlug(slug)
+  if (!page) return null
+  return <SeoContentPage page={page} />
+}
 
 function AppContent() {
   const [buttonsCollapsed, setButtonsCollapsed] = useState(true)
@@ -42,19 +47,27 @@ function AppContent() {
   return (
     <>
       <ScrollToTop />
-      <SEOHead />
       <div className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-grow">
           <AnimatePresence mode="wait">
             <Routes location={location} key={location.pathname}>
-              <Route path="/" element={<Navigate to="/menu" replace />} />
-              <Route path="/anasayfa" element={<Home />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/konyada-ne-yenir" element={<KonyadaNeYenir />} />
               <Route path="/hakkimizda" element={<About />} />
               <Route path="/galeri" element={<Gallery />} />
               <Route path="/menu" element={<Menu />} />
               <Route path="/menu/order" element={<Order />} />
               <Route path="/iletisim" element={<Contact />} />
+              {SEO_PAGES
+                .filter((p) => p.slug !== 'konyada-ne-yenir')
+                .map((p) => (
+                  <Route
+                    key={p.slug}
+                    path={`/${p.slug}`}
+                    element={<SeoPageRoute slug={p.slug} />}
+                  />
+                ))}
             </Routes>
           </AnimatePresence>
         </main>
@@ -97,20 +110,15 @@ function AppContent() {
 function App() {
   const [showSplash, setShowSplash] = useState(true)
 
-  useEffect(() => {
-    void bootstrapMenuExperience()
-
-    const showTimer = setTimeout(() => {
-      setTimeout(() => setShowSplash(false), SPLASH_EXIT_MS)
-    }, SPLASH_MIN_MS)
-
-    return () => clearTimeout(showTimer)
-  }, [])
+  const handleSplashFinish = () => {
+    setTimeout(() => setShowSplash(false), 500)
+  }
 
   return (
     <>
+      <SEOHead />
       <AnimatePresence mode="wait">
-        {showSplash && <SplashScreen key="splash" />}
+        {showSplash && <SplashScreen key="splash" onFinish={handleSplashFinish} />}
       </AnimatePresence>
       {!showSplash && <AppContent />}
     </>

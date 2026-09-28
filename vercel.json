@@ -1,14 +1,24 @@
 {
   "redirects": [
     {
-      "source": "/",
-      "destination": "/menu",
-      "permanent": true
-    },
-    {
       "source": "/favicon.ico",
       "destination": "/favicon-32.png",
       "permanent": false
+    },
+    {
+      "source": "/anasayfa",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/About",
+      "destination": "/hakkimizda",
+      "permanent": true
+    },
+    {
+      "source": "/about",
+      "destination": "/hakkimizda",
+      "permanent": true
     },
     {
       "source": "/IMG_0367.png",
@@ -69,6 +79,12 @@
     },
     {
       "source": "/logo.png",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
+      ]
+    },
+    {
+      "source": "/IMG_(.*).webp",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=604800, stale-while-revalidate=86400" }
       ]

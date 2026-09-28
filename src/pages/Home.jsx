@@ -48,7 +48,7 @@ export default function Home() {
             <motion.img
               key={currentImageIndex}
               src={heroUrls[currentImageIndex]}
-              alt={BRAND.name}
+              alt={`${BRAND.name} — Konya restoran`}
               className="w-full h-full object-cover absolute inset-0 scale-105"
               initial={{ opacity: 0, scale: 1.1 }}
               animate={{ opacity: 1, scale: 1.05 }}
@@ -235,6 +235,44 @@ export default function Home() {
                 </div>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Konya rehberi ve iç bağlantılar */}
+      <section className="py-16 bg-white border-t border-gray-100">
+        <div className="container-custom max-w-3xl mx-auto text-center">
+          <h2 className="text-2xl md:text-3xl font-display font-bold text-gray-900 mb-4">
+            Konya&apos;da ne yenir?
+          </h2>
+          <p className="text-gray-600 leading-relaxed mb-8">
+            Selçuklu, Mevlevi ve Konya mutfağından lezzetler, menümüz ve rezervasyon için bağlantılar.
+          </p>
+          <div className="flex flex-wrap justify-center gap-3 sm:gap-4">
+            <Link
+              to="/konyada-ne-yenir"
+              className="px-5 py-2.5 rounded-full bg-amber-50 text-amber-800 font-semibold text-sm hover:bg-amber-100 transition-colors"
+            >
+              Konya lezzet rehberi
+            </Link>
+            <Link
+              to="/menu"
+              className="px-5 py-2.5 rounded-full bg-amber-50 text-amber-800 font-semibold text-sm hover:bg-amber-100 transition-colors"
+            >
+              Menü
+            </Link>
+            <Link
+              to="/hakkimizda"
+              className="px-5 py-2.5 rounded-full bg-amber-50 text-amber-800 font-semibold text-sm hover:bg-amber-100 transition-colors"
+            >
+              Hakkımızda
+            </Link>
+            <Link
+              to="/menu/order"
+              className="px-5 py-2.5 rounded-full bg-amber-50 text-amber-800 font-semibold text-sm hover:bg-amber-100 transition-colors"
+            >
+              Rezervasyon
+            </Link>
           </div>
         </div>
       </section>
