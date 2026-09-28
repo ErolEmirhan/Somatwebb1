@@ -7,8 +7,38 @@
     },
     {
       "source": "/favicon.ico",
-      "destination": "/logo.png",
+      "destination": "/favicon-32.png",
       "permanent": false
+    },
+    {
+      "source": "/IMG_0367.png",
+      "destination": "/IMG_0367.webp",
+      "permanent": true
+    },
+    {
+      "source": "/IMG_0371.png",
+      "destination": "/IMG_0371.webp",
+      "permanent": true
+    },
+    {
+      "source": "/IMG_3323.png",
+      "destination": "/IMG_3323.webp",
+      "permanent": true
+    },
+    {
+      "source": "/IMG_3698.png",
+      "destination": "/IMG_3698.webp",
+      "permanent": true
+    },
+    {
+      "source": "/IMG_8589.png",
+      "destination": "/IMG_8589.webp",
+      "permanent": true
+    },
+    {
+      "source": "/IMG_8597.png",
+      "destination": "/IMG_8597.webp",
+      "permanent": true
     }
   ],
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }],

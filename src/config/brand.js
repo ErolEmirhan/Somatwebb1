@@ -1,4 +1,4 @@
-/** Resmî logo (public/logo.png). Favicon, Open Graph, Twitter ve sitedeki tüm marka görselleri bu dosyayı kullanır. */
+/** Web için küçültülmüş resmî logo. Sosyal paylaşım ve sitedeki marka görselleri bunu kullanır. */
 export const BRAND_LOGO_PATH = '/logo.png'
 
 export const BRAND = {
